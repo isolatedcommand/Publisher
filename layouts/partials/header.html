@@ -26,7 +26,7 @@
           {{ $pageURL:= $currentPage.Permalink | absLangURL }}
           {{ $active := eq $menuURL $pageURL }}
           {{ if .HasChildren }}
-          <li class="nav-item dropdown 
+          <li {{ if .Params.manager }}data-mgr="1"{{ end }} class="nav-item dropdown
           {{ range .Children }}
           {{ $childURL := .URL | absLangURL }}
           {{ $active := eq $childURL $pageURL }}
@@ -46,7 +46,7 @@
             </ul>
           </li>
           {{ else }}
-          <li class="nav-item">
+          <li {{ if .Params.manager }}data-mgr="1"{{ end }} class="nav-item">
             <a class="nav-link {{ if $active }}current{{ end }}" {{if findRE `^http` .URL}}target="_blank" rel="noopener" {{end}}
               href="{{if findRE `^#` .URL}}{{if not $.IsHome}}{{site.BaseURL | relLangURL}}{{end}}{{.URL}}{{else}}{{.URL | relLangURL}}{{end}}">{{.Name}}</a>
           </li>

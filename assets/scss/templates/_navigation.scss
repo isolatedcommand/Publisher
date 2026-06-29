@@ -186,3 +186,6 @@
   background: $color-primary;
   color: $white !important;
 }
+
+// Role-gated menu items: hidden until revealed for the right role (data-mgr).
+.navbar-nav > li[data-mgr] { display: none; }
