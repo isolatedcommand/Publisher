@@ -1,4 +1,4 @@
-# Publisher by Isolated Command
+# Publisher by Isolated Command Developer Community
 
 Centralized Hugo theme (UI layer) for Isolated Command websites.
 Consumed by child sites via Hugo Modules:
