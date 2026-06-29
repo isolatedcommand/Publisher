@@ -1,0 +1,7 @@
+baseURL = "https://example.org/"
+title = "Publisher — Example Site"
+languageCode = "en-us"
+
+[module]
+  [[module.imports]]
+    path = "github.com/isolatedcommand/Publisher"

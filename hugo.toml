@@ -12,3 +12,50 @@
   [outputFormats.WebAppManifest]
     mediaType = "application/manifest+json"
     rel = "manifest"
+
+####################### theme default site variables ######################
+# Default colors/fonts so the SCSS compiles out of the box. Child sites may
+# override any of these in their own [params.variables].
+[params.variables]
+color_primary = "#3272c8"
+body_color = "#fff"
+text_color = "white"
+text_red = "red"
+text_blue = "#3272c8"
+text_dark = "white"
+text_light = "white"
+border_color = "white"
+black = "#000000"
+white = "#fff"
+light = "white"
+font_size = "15px"
+font_scale = "1.25"
+font_primary = "Roboto+Slab:wght@300;400"
+font_primary_type = "monospace"
+font_secondary = "Roboto+Slab:wght@300;400"
+font_secondary_type = "monospace"
+font_icon = "Font Awesome 5 Free"
+
+############################# theme default plugins ##########################
+[[params.plugins.css]]
+link = "plugins/bootstrap/bootstrap.min.css"
+[[params.plugins.css]]
+link = "plugins/slick/slick.css"
+[[params.plugins.css]]
+link = "plugins/font-awesome/fontawesome.min.css"
+[[params.plugins.css]]
+link = "plugins/font-awesome/brands.css"
+[[params.plugins.css]]
+link = "plugins/font-awesome/solid.css"
+[[params.plugins.js]]
+link = "plugins/jquery/jquery.min.js"
+[[params.plugins.js]]
+link = "plugins/bootstrap/bootstrap.min.js"
+[[params.plugins.js]]
+link = "plugins/slick/slick.min.js"
+[[params.plugins.js]]
+link = "plugins/shuffle/shuffle.min.js"
+[[params.plugins.js]]
+link = "plugins/google-map/gmap.js"
+[[params.plugins.js]]
+link = "plugins/webfont-loader/webfont-loader-2.min.js"
