@@ -4,5 +4,3 @@ resources/
 hugo_stats.json
 .DS_Store
 node_modules/
-exampleSite/public/
-exampleSite/resources/
