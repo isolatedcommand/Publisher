@@ -62,6 +62,8 @@
           </li>
           {{ end }}
           {{ end }}
+          {{/* Optional per-site navbar slot (e.g. auth widget). Empty by default. */}}
+          {{ partial "custom/navbar-end.html" . }}
           <li>
             <!-- Language List -->
             {{ if .IsTranslated }}
