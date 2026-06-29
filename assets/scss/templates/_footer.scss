@@ -1,0 +1,40 @@
+.footer {
+  background: black;
+  min-height: 205px;
+  text-align: center;
+  padding-top: 67px;
+  p {
+    font-size: 13px;
+    line-height: 2;
+    color: red;
+  }
+  a {
+    color: lighten( $black, 34.9 );
+  }
+  .footer-menu {
+    padding-bottom: 25px;
+    ul {
+      margin: 0px;
+      padding: 0px;
+      li {
+        display: inline-block;
+        padding: 0px 20px;
+        a {
+          display: inline-block;
+          color: red;
+          &:hover {
+            color: #3272c8;
+            hr {
+              color: red;
+            }
+          }
+        }
+      }
+    }
+  }
+  .copyright {
+    a {
+      font-weight: 600;
+    }
+  }
+}

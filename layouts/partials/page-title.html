@@ -1,0 +1,15 @@
+<section class="page-title">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h1><b>{{ .Title }}</b></h1>
+          <h3>{{ .Params.description }}</h3>
+                <div>
+       {{ with .Params.slogan }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

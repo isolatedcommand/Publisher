@@ -1,0 +1,124 @@
+// Hero Banner / Slider - Dark Hacker Theme (Warm) — starfield shows through
+.slider {
+  background: transparent;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  padding: 170px 0 200px;
+  position: relative;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(0, 168, 204, 0.3);
+
+  @include large-desktop {
+    background-attachment: unset;
+    padding: 150px 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(232, 228, 224, 0.01),
+      rgba(232, 228, 224, 0.01) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+    pointer-events: none;
+  }
+
+  .block {
+    color: var(--color-text-light);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    h1 {
+      font-weight: 700;
+      font-size: 56px;
+      line-height: 1.2;
+      letter-spacing: 2px;
+      padding-bottom: 20px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      animation: fadeInUp 0.8s ease-out;
+
+      // No glow/overlay — keep each heading's own inline color (red <IC/>, blue COMMAND)
+
+      @include tablet {
+        font-size: 40px;
+        letter-spacing: 1.5px;
+      }
+
+      @include mobile {
+        font-size: 32px;
+        letter-spacing: 1px;
+      }
+
+      @include mobile-xs {
+        font-size: 24px;
+      }
+    }
+
+    h4 {
+      margin-bottom: 40px;
+      color: var(--color-text-light);
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      animation: fadeInUp 0.8s ease-out 0.6s backwards;
+
+      @include mobile {
+        font-size: 14px;
+      }
+    }
+
+    p {
+      margin-bottom: 30px;
+      color: var(--color-text-light);
+      font-size: 18px;
+      line-height: 1.8;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+
+      @include mobile {
+        font-size: 14px;
+      }
+    }
+
+    .btn {
+      margin: 10px;
+      animation: fadeInUp 0.8s ease-out 0.9s backwards;
+
+      @include mobile {
+        font-size: 12px;
+        padding: 10px 20px;
+      }
+    }
+
+    @include mobile {
+      .btn {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

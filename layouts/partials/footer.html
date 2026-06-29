@@ -1,0 +1,25 @@
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="footer-menu">
+
+
+          <ul>
+
+            {{ range site.Menus.footer }}
+            <li><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
+            {{ end }}
+          </ul><br>
+
+                      <ul class="social-icons">
+            {{ range .Site.Params.social }}
+            <li><a href="{{ .link | safeURL }}" aria-label="{{ .title | default `Social link` }}" title="{{ .title }}" target="_blank" rel="noopener"><i class="{{ .icon }}" style="color:red;" aria-hidden="true"></i></a></li>
+            {{ end }}</ul>
+        </div>
+
+        <p class="copyright">{{ site.Params.copyright | markdownify }}</p>
+      </div>
+    </div>
+  </div>
+</footer>

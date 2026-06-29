@@ -1,0 +1,43 @@
+<!-- Google Maps API -->
+{{ if site.Params.gmap.enable }}
+{{ if ("contact/" | relLangURL | eq .RelPermalink) }}
+<script defer src="https://maps.googleapis.com/maps/api/js?key={{ site.Params.gmap.gmap_api }}&libraries=places"></script>
+{{ end }}
+{{ end }}
+
+<!-- JS Plugins + Main script -->
+{{ $scripts := slice }}
+{{ range site.Params.plugins.js}}
+{{ if findRE "^http" .link }}
+<script src="{{ .link | relURL }}" type="application/javascript" {{.attributes | safeHTMLAttr}}></script>
+{{ else }}
+{{ $scripts = $scripts | append (resources.Get .link) }}
+{{ end }}
+{{ end }}
+{{ $scripts := $scripts | append (resources.Get "js/interactive-components.js" | minify) }}
+{{ $scripts := $scripts | append (resources.Get "js/script.js" | minify) }}
+{{ $scripts := $scripts | resources.Concat "js/script.js" | minify | fingerprint "sha512" }}
+<script crossorigin="anonymous" defer="defer" integrity="{{ $scripts.Data.Integrity }}" type="application/javascript">{{$scripts.Content | safeJS}}</script>
+
+<!-- cookie -->
+{{ with site.Params.cookies }}
+{{ if .enable }}
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="5980e7e4-3ae8-4e51-85ab-b04e256656ee" data-blockingmode="auto" type="text/javascript"></script>
+{{ end }}
+{{ end }}
+
+<!-- font family -->
+{{$pf:= site.Params.variables.font_primary}}
+{{$sf:= site.Params.variables.font_secondary}}
+<script type="application/javascript">
+  WebFont.load({
+    google: {
+      api: 'https://fonts.googleapis.com/css2',
+      families: ['{{$pf | default `Lato:wght@400`}}{{if not $sf}}&display=swap{{end}}'{{with $sf}},'{{. | default `Lato:wght@400`}}&display=swap'{{end}}],
+      version: 2
+    },
+    active: () => {
+      sessionStorage.fontsLoaded = true
+    }
+  });
+</script>

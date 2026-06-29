@@ -1,0 +1,14 @@
+<div class="pdf-container">
+
+    <div class="pdf-actions">
+<a href="{{ .Get "src" }}" target="_blank" rel="noopener">
+    Full Screen
+</a>
+  <iframe
+    src="{{ .Get "src" }}"
+    width="100%"
+    height="{{ .Get "height" | default "900" }}"
+    style="border:none;">
+  </iframe>
+</div>
+</div>

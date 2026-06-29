@@ -1,0 +1,162 @@
+{{ define "main" }}
+
+<!-- banner -->
+{{ with .Params.banner }}
+{{ if .enable }}
+<section class="slider {{ if .bg_overlay }}overly{{ end }}" style="background-image: url('{{ .bg_image | relURL }}');">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+
+
+          {{ with .isolated }}<h1 style="color:#e80f12;" data-typing>&lt;{{ . | markdownify }}/&gt;</h1>{{ end }}
+          {{ with .command }}<h1 style="color:#3071c4;" data-typing>{{ . | markdownify }}</h1>{{ end }}
+          {{ with .slogan }}<h4 style="color:var(--color-text-light);">{{ . | markdownify }}</h4>{{ end }}
+          {{ with .button1 }}
+          {{ if .enable }}
+          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
+          {{ end }}
+          {{ end }}
+          {{ with .button2 }}
+          {{ if .enable }}
+          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
+          {{ end }}
+          {{ end }}
+          {{ with .button3 }}
+          {{ if .enable }}
+          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
+          {{ end }}
+          {{ end }}
+          {{ with .button4 }}
+          {{ if .enable }}
+          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
+          {{ end }}
+          {{ end }}
+          {{ with .button5 }}
+          {{ if .enable }}
+          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
+          {{ end }}
+          {{ end }}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+<!-- /banner -->
+
+<!-- announcement -->
+
+{{ with .Params.announcement }}
+{{ if .enable }}
+<section class="testimonial">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block section-title text-center">
+
+          {{ with .title }}<h1>{{ . | markdownify }}</h1>{{ end }} <hr>
+          {{ with .anntitle1 }}<h2>{{ . | markdownify }}</h2>{{ end }}
+          {{ with .anndesc1 }}<h3>{{ . | markdownify }}</h3>{{ end }}
+        
+        </div>
+      </div>
+    </div>
+  </div>
+   {{ end }}
+{{ end }}
+</section>
+
+<!-- /banner -->
+
+<!-- /announcement -->
+
+<!-- about
+{{ with .Params.about }}
+{{ if .enable }}
+<section class="about section">
+  <div class="container">
+    <div class="row">
+        <div class="block">
+
+            {{ with .title }}<h1>{{ . | markdownify }}</h1>{{ end }}
+ 
+          {{ with .content }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+/about -->
+
+<!-- portfolio
+{{ with .Params.portfolio }}
+{{ if .enable }}
+<section class="feature bg-2" style="background-image: url('{{ .bg_image | relURL }}')">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-6">
+        {{ with .title }}<h2 class="section-subtitle">{{ . | markdownify }}</h2>{{ end }}
+        {{ with .content }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
+        {{ with .button }}
+        {{ if .enable }}
+        <a href="{{ .link | relLangURL }}" class="btn btn-view-works">{{ .label }}</a>
+        {{ end }}
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+/portfolio -->
+
+<!-- service
+{{ if .Params.service.enable }}
+{{ partial "service.html" . }}
+{{ end }}
+/service -->
+
+<!-- call to action -->
+{{ if .Params.cta.enable }}
+{{ partial "cta.html" . }}
+{{ end }}
+<!-- /call to action -->
+
+<!-- funfacts -->
+{{ with .Params.funfacts }}
+{{ if .enable }}
+<section class="testimonial">
+  <div class="container">
+    <div class="row">
+      <div class="section-title text-center">
+        {{ with .title }}<h2>{{ . | markdownify }}</h2>{{ end }}
+        {{ with .description }}<h5>{{ . | markdownify }}</h5>{{ end }}
+      </div>
+    </div>
+    <div class="row">
+
+        <div class="block">
+          <ul class="counter-box clearfix">
+            {{ range .funfact_item }}
+            <li class="counter-item">
+              <i class="{{ .icon }}"></i>
+              <h4 class="count" data-count="{{ .count }}">0</h4>
+              <h3>{{ .name | markdownify }}</h3>
+            </li>
+            {{ end }}
+          </ul>
+        </div>
+     
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+<!-- /funfacts -->
+
+{{ end }}

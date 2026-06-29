@@ -1,0 +1,12 @@
+name = "Publisher by Isolated Command"
+license = "MIT"
+licenselink = "https://github.com/isolatedcommand/Publisher/blob/main/LICENSE"
+description = "Centralized Hugo theme powering Isolated Command websites. No Boundaries, No Limits."
+homepage = "https://github.com/isolatedcommand/Publisher"
+demosite = "https://isolatedcommand.com"
+tags = ["Responsive", "Bootstrap", "Dark Mode", "Multilingual", "Clean"]
+min_version = "0.147.2"
+
+[author]
+  name = "Isolated Command"
+  homepage = "https://isolatedcommand.com"

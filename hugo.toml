@@ -1,0 +1,14 @@
+# Theme-level configuration merged into every child site.
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = '0.147.2'
+
+[mediaTypes]
+  [mediaTypes."application/manifest+json"]
+    suffixes = ["webmanifest"]
+
+[outputFormats]
+  [outputFormats.WebAppManifest]
+    mediaType = "application/manifest+json"
+    rel = "manifest"

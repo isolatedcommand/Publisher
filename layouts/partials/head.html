@@ -1,0 +1,245 @@
+<meta charset="utf-8">
+<title>{{.Title | default site.Title}}</title>
+
+
+<!-- Consent Mode must run before any Google tag -->
+{{ partial "consent-mode.html" . }}
+
+<!-- base url -->
+{{ if or (eq site.BaseURL "/") (eq site.BaseURL "http://localhost:1313/") (eq site.BaseURL "http://examplesite.org/") (eq site.BaseURL "https://examplesite.org/") (eq site.BaseURL "http://examplesite.com/") (eq site.BaseURL "https://examplesite.com/")}}{{else}}
+<base href="{{ .Permalink }}">
+{{ end }}
+
+<!-- multilingual SEO optimizations -->
+{{ if .IsTranslated }}
+{{ range .AllTranslations }}
+<link rel="alternate" hreflang="{{.Lang}}" href="{{ .RelPermalink | absLangURL }}">
+{{ end }}
+<link rel="alternate" hreflang="x-default" href="{{ .RelPermalink | absLangURL }}">
+<meta name="google-adsense-account" content="ca-pub-9963131532470366">
+{{ end }}
+
+<!-- mobile responsive meta -->
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<meta name="description" content="{{ .Params.Description | default site.Params.description }}">
+<meta name="google-adsense-account" content="ca-pub-9963131532470366">
+{{ with site.Params.author }}
+<meta name="author" content="{{ . }}">{{ end }}
+
+<!-- canonical URL (points at the production domain) -->
+{{ $canonical := .Permalink }}
+{{ with site.Params.canonical_base }}{{ $canonical = printf "%s%s" (strings.TrimSuffix "/" .) $.RelPermalink }}{{ end }}
+<link rel="canonical" href="{{ $canonical }}">
+
+<!-- robots: staging is kept out of the index -->
+{{ if site.Params.seo_noindex }}
+<meta name="robots" content="noindex, nofollow">
+{{ else }}
+<meta name="robots" content="index, follow, max-image-preview:large">
+{{ end }}
+
+<!-- structured data: Organization + WebSite -->
+{{ $site_base := or site.Params.canonical_base (strings.TrimSuffix "/" site.BaseURL) }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Isolated Command",
+      "url": "{{ $site_base }}",
+      "logo": "{{ $site_base }}/images/logo.png",
+      "description": "{{ site.Params.description }}",
+      "email": "{{ site.Params.email }}",
+      "sameAs": [
+        {{ range $i, $s := site.Params.social }}{{ if $i }},{{ end }}"{{ $s.link }}"{{ end }}
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "name": "{{ site.Title }}",
+      "url": "{{ $site_base }}"
+    }
+  ]
+}
+</script>
+
+<!-- google site verification -->
+{{ with site.Params.site_verification.google }}
+<meta name="google-site-verification" content="{{ . }}" />
+<meta name="google-adsense-account" content="ca-pub-9963131532470366">
+
+{{ end }}
+
+<!-- bing site verification -->
+{{ with site.Params.site_verification.bing }}
+<meta name="msvalidate.01" content="{{ . }}" />
+{{ end }}
+
+<!-- baidu site verification -->
+{{ with site.Params.site_verification.baidu }}
+<meta name="baidu-site-verification" content="{{ . }}" />
+{{ end }}
+
+<!-- favicon -->
+{{ $favicon:= site.Params.favicon }}
+{{ if $favicon }}
+{{ if fileExists (add `assets/` $favicon) }}
+{{ $favicon:= resources.Get $favicon }}
+{{ $favicon_16:= $favicon.Resize "16x png"}}
+{{ $favicon_32:= $favicon.Resize "32x png"}}
+{{ $favicon_180:= $favicon.Resize "180x png"}}
+<link rel="shortcut icon" href="{{$favicon_32.RelPermalink}}" type="image/x-icon">
+<link rel="icon" href="{{$favicon_32.RelPermalink}}" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="16x16" href="{{$favicon_16.RelPermalink}}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{$favicon_32.RelPermalink}}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{$favicon_180.RelPermalink}}">
+{{ end }}
+{{ end }}
+<link rel="manifest" href="{{`manifest.webmanifest` | relLangURL }}">
+
+
+<!-- Open Graph image and Twitter Card meta-data -->
+{{ $image_path := .Params.image | default site.Params.image }}
+{{ $image_path_local :=  printf "assets/%s" $image_path }}
+{{ $image_ext := trim (path.Ext $image_path | lower) "." }}
+{{ if fileExists $image_path_local }}
+<meta property="og:image" content="{{ $image_path | absURL }}" />
+<!-- If not SVG, read image aspect ratio and define Twitter Card and Open Graph width and height  -->
+{{ if ne $image_ext "svg" }}
+{{ with (imageConfig $image_path_local) }}
+{{ if (and (gt .Width 144) (gt .Height 144)) }}
+<meta name="twitter:image" content="{{ $image_path | absURL }}" />
+<meta name="twitter:card"
+  content="summary{{ if (and (gt .Width 300) (gt .Height 157) (not (eq .Width .Height))) }}_large_image{{ end }}">
+{{ end }}
+<meta property="og:image:width" content="{{ .Width }}">
+<meta property="og:image:height" content="{{ .Height }}">
+{{ end }}
+{{ end }}
+<meta property="og:image:type"
+  content="image/{{ if eq $image_ext `svg` }}svg+xml{{ else }}{{ replaceRE `^jpg$` `jpeg` $image_ext }}{{ end }}">
+{{ end }}
+<meta name="twitter:title" content="{{ with .Title }}{{ . }}{{ else }}{{ site.Title }}{{ end }}" />
+<meta name="twitter:description"
+  content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}" />
+
+<!-- Iterate over social items -->
+{{ range .Site.Params.social }}
+  {{ with .twitter }}
+    <meta name="twitter:site" content="@{{ . }}" />
+  {{ end }}
+{{ end }}
+
+<!-- Iterate over authors -->
+{{ range .Site.Params.authors }}
+  {{ with .twitter }}
+    <meta name="twitter:creator" content="@{{ . }}" />
+  {{ end }}
+{{ end }}
+
+
+
+
+{{ template "_internal/opengraph.html" . }}
+
+<!-- google analytics is loaded with Consent Mode v2 in consent-mode.html (in <head>) -->
+
+<!-- google tag manager -->
+{{ with site.Params.google_tag_manager }}
+<script>
+  var dataLayer = window.dataLayer = window.dataLayer || [];
+  dataLayer.push({
+    page: '{{ .Title }}',
+    categories: 'only examples about your dataLayer'
+  });
+</script>
+<script>
+  (function (w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({
+      'gtm.start': new Date().getTime(),
+      event: 'gtm.js'
+    });
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      dl = l != 'dataLayer' ? '&l=' + l : '';
+    j.async = true;
+    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', '{{ . }}');
+</script>
+{{ end }}
+
+<!-- matomo analytics -->
+{{ with site.Params.matomo }}
+{{ if .enable }}
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function () {
+    var u = "{{.url|safeURL}}";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
+    _paq.push(['setSiteId', '{{.id}}']);
+    var d = document,
+      g = d.createElement('script'),
+      s = d.getElementsByTagName('script')[0];
+    g.type = 'text/javascript';
+    g.async = true;
+    g.src = u + 'matomo.js';
+    s.parentNode.insertBefore(g, s);
+  })();
+</script>
+{{ end }}
+{{ end }}
+
+<!--  Baidu analytics -->
+{{ if site.Params.baidu.enable }}
+{{ with site.Params.baidu.analytics_id }}
+<script>
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?{{ . }}";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+{{ end }}
+{{ end }}
+
+<!-- Plausible Analytics -->
+{{ with site.Params.plausible }}
+{{ if .enable }}
+{{ with .domain }}
+<script defer data-domain="{{ . }}" src="https://plausible.io/js/plausible.js"></script>
+{{ end }}
+{{ end }}
+{{ end }}
+
+<!-- Counter Analytics -->
+{{ with site.Params.counter }}
+{{ if .enable }}
+{{ with .id }}
+<script src="https://cdn.counter.dev/script.js" data-id="{{ . }}" data-utcoffset="{{ site.Params.counter.utc_offset | default "0" }}"></script>
+{{ end }}
+{{ end }}
+{{ end }}
+
+<!-- Google reCaptcha — only on the contact page where the form renders -->
+{{ if and site.Params.contact.form.use_recaptcha site.Params.contact.form.enable (eq .RelPermalink "/contact/") }}
+<script src="https://www.google.com/recaptcha/api.js?render={{ site.Params.recaptcha_site_key }}"></script>
+<script>
+  grecaptcha.ready(function() {
+      grecaptcha.execute('{{ site.Params.recaptcha_site_key }}', {action: 'homepage'})
+      .then(function(token) {
+        document.getElementById('captchaResponse').value = token;
+      });
+    });
+</script>
+{{ end }}
+
+<!-- Font Awesome (all pages) -->
+<script async src="https://kit.fontawesome.com/92967daa95.js" crossorigin="anonymous"></script>

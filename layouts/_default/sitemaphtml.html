@@ -1,0 +1,47 @@
+{{ define "main" }}
+
+{{ partial "page-title.html" . }}
+
+<section class="page-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+
+        {{ with .Content }}<div class="sitemap-intro">{{ . }}</div>{{ end }}
+
+        <div class="sitemap">
+          {{ range site.Sections.ByTitle }}
+          <div class="sitemap-group">
+            <h3 class="sitemap-section">
+              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            </h3>
+            {{ $pages := .RegularPages }}
+            {{ with $pages }}
+            <ul class="sitemap-links">
+              {{ range .ByTitle }}
+              <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+              {{ end }}
+            </ul>
+            {{ end }}
+          </div>
+          {{ end }}
+
+          {{ $top := where site.RegularPages "Section" "" }}
+          {{ with $top }}
+          <div class="sitemap-group">
+            <h3 class="sitemap-section">Pages</h3>
+            <ul class="sitemap-links">
+              {{ range .ByTitle }}
+              <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+              {{ end }}
+            </ul>
+          </div>
+          {{ end }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ end }}

@@ -1,0 +1,64 @@
+{{ define "main" }}
+
+{{ partial "page-title.html" . }}
+
+{{ $data := index site.Data site.Language.Lang }}
+
+<section class="portfolio-work">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+
+          <div class="row shuffle-wrapper g-4">
+            {{ range .Data.Pages -}}
+              {{ $cats := .Params.category -}}
+              {{ if not (reflect.IsSlice $cats) }}{{ $cats = slice ($cats) }}{{ end -}}
+              {{ $cats = apply $cats "urlize" "." | jsonify -}}
+                      
+              <div class="col-12 col-sm-6 col-md-4 portfolio-item shuffle-item" data-groups="{{ $cats }}">
+                <article class="project-card">
+                                        
+                  <div class="project-media">
+                    {{ if isset .Params "image" -}}
+                      <a href="{{ .RelPermalink }}" class="project-cover-link" aria-label="{{ .Title }}">
+                        <img
+                          src="{{ .Params.image | relURL }}"
+                          alt="{{ .Title }}"
+                          loading="lazy"
+                          class="project-cover"
+                        >
+                      </a>
+                    {{- else -}}
+                      <!-- fallback background -->
+                      <div class="project-cover project-cover--placeholder"></div>
+                    {{- end }}
+                  </div>
+                    
+                  <div class="project-body">
+                    <h3 class="project-title">
+                      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </h3>
+                    {{ with .Params.description }}
+                      <p class="project-desc">{{ . }}</p>
+                    {{ end }}
+                  </div>
+
+                  <div class="project-footer">
+                    <a href="{{ .RelPermalink }}" class="btn-view-more">View more</a>
+                  </div>
+                </article>
+                
+              </div>
+            {{- end }}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+
+{{ end }}

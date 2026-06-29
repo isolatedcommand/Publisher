@@ -1,0 +1,67 @@
+<!--
+
+PROJECT: IsolatedCommand
+VERSION: 1.0.0
+AUTHOR: IsolatedCommand
+AUTHOR WEBSITE: https://isolatedcommand.com
+
+-->
+
+<!DOCTYPE html>
+<html lang="{{ site.LanguageCode | default `en-US` }}" itemscope itemtype="http://schema.org/WebPage">
+
+<head>
+	{{ partial "head.html" . }}
+
+	<!-- cache partial only in production -->
+	{{ if hugo.IsProduction }}
+	{{ partialCached "style.html" . }}
+	{{ else }}
+	{{ partial "style.html" . }}
+	{{ end }}
+</head>
+
+<body>
+	<!-- Animated starfield background -->
+	<div class="starfield" aria-hidden="true">
+		<div id="stars"></div>
+		<div id="stars2"></div>
+		<div id="stars3"></div>
+	</div>
+
+	<!-- Print/PDF header: logo + source URL (only visible when printing) -->
+	{{ $print_url := .Permalink }}
+	{{ with site.Params.canonical_base }}{{ $print_url = printf "%s%s" (strings.TrimSuffix "/" .) $.RelPermalink }}{{ end }}
+	<div class="print-header" aria-hidden="true">
+		<img class="print-logo" src="{{ site.Params.logo | absURL }}" alt="Isolated Command">
+		<span class="print-url">Source: {{ $print_url }}</span>
+	</div>
+
+	<!-- cache partial only in production -->
+	{{ partial "header.html" . }}
+	{{ if hugo.IsProduction }}
+	{{ partialCached "preloader.html" . }}
+	{{ else }}
+	{{ partial "preloader.html" . }}
+	{{ end }}
+
+	<!-- Google Tag Manager (noscript) -->
+	{{ with site.Params.google_tag_manager }}
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ . }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	{{ end }}
+
+	<main>
+		{{ block "main" . }}{{ end }}
+	</main>
+
+	<!-- cache partial only in production -->
+	{{ if hugo.IsProduction }}
+	{{ partialCached "footer.html" . }}
+	{{ partialCached "script.html" . }}
+	{{ else }}
+	{{ partial "footer.html" . }}
+	{{ partial "script.html" . }}
+	{{ end }}
+</body>
+
+</html>

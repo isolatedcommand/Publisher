@@ -1,0 +1,27 @@
+<!-- DNS preconnect -->
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<!-- preconnect: critical render-path origins only (keep <= 4) -->
+<link rel="preconnect" href="https://kit.fontawesome.com" crossorigin>
+<link rel="preconnect" href="https://ka-f.fontawesome.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- dns-prefetch: later / non-critical origins -->
+<link rel="dns-prefetch" href="https://ka-f.fontawesome.com">
+<link rel="dns-prefetch" href="//www.googletagmanager.com">
+<link rel="dns-prefetch" href="//www.google-analytics.com">
+<link rel="dns-prefetch" href="//consent.cookiebot.com">
+<link rel="dns-prefetch" href="//consentcdn.cookiebot.com">
+<link rel="dns-prefetch" href="//pagead2.googlesyndication.com">
+
+<!-- plugins + stylesheet -->
+{{ $styles := slice }}
+{{ range site.Params.plugins.css }}
+{{ if findRE "^http" .link }}
+<link crossorigin="anonymous" media="all" rel="stylesheet" href="{{ .link | relURL }}" {{.attributes | safeHTMLAttr}} >
+{{ else }}
+{{ $styles = $styles | append (resources.Get .link) }}
+{{ end }}
+{{ end }}
+{{ $styles := $styles | append (resources.Get "scss/style.scss" | resources.ExecuteAsTemplate "style.scss" . | toCSS) }}
+{{ $styles := $styles | resources.Concat "/css/style.css" | minify | fingerprint "sha512"}}
+<style type="text/css">{{$styles.Content | safeCSS}}</style>

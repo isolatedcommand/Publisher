@@ -1,0 +1,61 @@
+{{ define "main" }}
+
+{{ partial "page-title.html" . }}
+
+<section class="page-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 sticky-top">
+        <h2>{{ .Title }}</h2>
+
+        
+        {{ with .Params.subtitle }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
+        
+        <p>
+          {{ time.Format ":date_full" .Lastmod }}
+        </p>
+            <li>
+              <i class="ion-android-people"></i>
+              {{ i18n "posted_by" }}
+
+              {{ $authors := slice }}
+              {{ if reflect.IsSlice .Params.author }}
+                {{ $authors = .Params.author }}
+              {{ else }}
+                {{ $authors = (slice .Params.author) }}
+              {{ end }}
+
+              {{ range $index, $elements := $authors }}
+                {{ if ne $index 0 }}, {{ end }}
+                <a class="text-primary"
+                  href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">
+                  {{ . }}
+                </a>
+              {{ end }}
+            </li>
+            
+        <h3>{{ i18n "faq_toc_title" }}</h3>
+        {{ .TableOfContents }}
+      </div>
+      <div class="col-md-8">
+        {{ .Content }}
+
+        {{ $members := where .Pages "Params.photo" "!=" nil }}
+        {{ with $members }}
+        <div class="team-grid">
+          {{ range . }}
+          <a class="team-card" href="{{ .RelPermalink }}">
+            <div class="team-photo">
+              <img src="{{ .Params.photo }}" alt="{{ .Params.name | default .Title }}" loading="lazy">
+            </div>
+            <h4 class="team-name">{{ .Params.name | default .Title }}</h4>
+            {{ with .Params.description }}<p class="team-role">{{ . }}</p>{{ end }}
+          </a>
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

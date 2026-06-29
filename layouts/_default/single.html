@@ -1,0 +1,113 @@
+{{ define "main" }}
+
+{{ partial "page-title.html" . }}
+<!-- checking learn -->
+{{ if or (eq .Section "learn") (eq .Section "learns") (eq .Section "categories") (eq .Section "tags") (eq .Section "post") }}
+
+<section class="page-wrapper">
+  <div class="container">
+    <div class="row">
+
+      <!-- LEFT SIDEBAR -->
+      <div class="col-md-4 sticky-top">
+
+        {{ with .Params.subtitle }}
+          {{ . | $.Page.RenderString (dict "display" "block") }}
+        {{ end }}
+
+        <p>
+          {{ time.Format ":date_full" .Lastmod }}
+        </p>
+
+        <!-- POST META -->
+        <div class="post-meta">
+          <ul class="list-unstyled">
+            <li>
+              <i class="ion-calendar"></i>
+              {{ time.Format ":date_full" .PublishDate }}
+            </li>
+
+            <li>
+              <i class="ion-android-people"></i>
+              {{ i18n "posted_by" }}
+
+              {{ $authors := slice }}
+              {{ if reflect.IsSlice .Params.author }}
+                {{ $authors = .Params.author }}
+              {{ else }}
+                {{ $authors = (slice .Params.author) }}
+              {{ end }}
+
+              {{ range $index, $elements := $authors }}
+                {{ if ne $index 0 }}, {{ end }}
+                <a class="text-primary"
+                  href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">
+                  {{ . }}
+                </a>
+              {{ end }}
+            </li>
+
+            <li>
+              <i class="ion-pricetags"></i>
+
+              {{ range $index, $elements:= .Params.tags }}
+                {{ if ne $index 0 }}, {{ end }}
+                <a href="{{ `tags/` | relLangURL }}{{ . | urlize }}">
+                  {{ . }}
+                </a>
+              {{ end }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- TOC -->
+        <h3>{{ i18n "faq_toc_title" }}</h3>
+        {{ .TableOfContents }}
+
+        <!-- OPTIONAL EXTRA SIDEBAR -->
+        {{ partial "learn-sidebar.html" . }}
+
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="col-md-8">
+        <div class="post post-single">
+
+          <!-- ARTICLE TOOLBAR -->
+          <div class="article-toolbar no-print">
+            <button class="btn article-action" type="button" onclick="window.print()">Print as PDF</button>
+            <button class="btn article-action" type="button" data-copy-md>Copy Markdown</button>
+            <textarea class="article-raw-md" hidden aria-hidden="true">{{ .RawContent }}</textarea>
+          </div>
+
+          <div class="post-thumb">
+            {{ with .Params.image }}
+              <img class="img-responsive"
+                   src="{{ . | relURL }}"
+                   alt="{{ $.Title }}">
+            {{ end }}
+          </div>
+
+          <div class="post-content post-excerpt">
+            {{ .Content }}
+          </div>
+
+          {{ with site.Params.DisqusShortname }}
+          <div class="post-comments">
+            {{ template "_internal/disqus.html" . }}
+          </div>
+          {{ end }}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- regular page -->
+{{ else }}
+  {{ .Render "default" }}
+{{ end }}
+
+{{ end }}
