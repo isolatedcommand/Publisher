@@ -150,3 +150,39 @@
     display: block !important;
   }
 }
+
+// ── Config-driven navbar CTA buttons ───────────────────────────────
+// Each child site declares its own buttons via [[params.navbar_buttons]].
+.navbar-nav > li.nav-cta-item {
+  display: flex;
+  align-items: center;
+}
+.navbar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-left: .5rem;
+  padding: 8px 18px !important;
+  font-weight: 600;
+  line-height: 1.2;
+  color: $white !important;
+  background: $color-primary;
+  border: 2px solid $color-primary;
+  border-radius: 8px;
+  transition: all .15s ease;
+}
+.navbar-cta:hover,
+.navbar-cta:focus {
+  filter: brightness(.92);
+  transform: translateY(-1px);
+  color: $white !important;
+}
+.navbar-cta--outline {
+  background: transparent;
+  color: $color-primary !important;
+}
+.navbar-cta--outline:hover,
+.navbar-cta--outline:focus {
+  background: $color-primary;
+  color: $white !important;
+}

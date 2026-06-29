@@ -52,6 +52,16 @@
           </li>
           {{ end }}
           {{ end }}
+          {{/* Config-driven CTA buttons — each child site sets its own via [[params.navbar_buttons]] */}}
+          {{ range site.Params.navbar_buttons }}
+          {{ if ne .enable false }}
+          <li class="nav-item nav-cta-item">
+            <a class="navbar-cta {{ with .style }}navbar-cta--{{ . }}{{ end }}"
+              href="{{ if findRE `^http` .link }}{{ .link }}{{ else }}{{ .link | relLangURL }}{{ end }}"
+              {{ if findRE `^http` .link }}target="_blank" rel="noopener"{{ end }}>{{ .label }}</a>
+          </li>
+          {{ end }}
+          {{ end }}
           <li>
             <!-- Language List -->
             {{ if .IsTranslated }}
