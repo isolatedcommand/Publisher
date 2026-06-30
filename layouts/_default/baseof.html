@@ -19,6 +19,8 @@ AUTHOR WEBSITE: https://isolatedcommand.com
 	{{ else }}
 	{{ partial "style.html" . }}
 	{{ end }}
+	{{/* Per-site head additions (e.g. extra CSS). Empty by default. */}}
+	{{ partial "custom/head-end.html" . }}
 </head>
 
 <body>
