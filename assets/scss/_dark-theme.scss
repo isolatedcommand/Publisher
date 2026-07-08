@@ -15,10 +15,10 @@
   --color-text-muted: #A1A1AA;     /* Muted zinc for secondary text */
   --color-accent-1: #e80f12;       /* Brand red */
   --color-accent-2: #3071c4;       /* Brand blue */
-  --color-accent: #39FF14;         /* THE accent — Electric Acid Green; feedback + node illumination ONLY */
+  --color-accent: #FF0033;         /* THE accent — Bloodline Red; feedback, highlights + node illumination ONLY */
   --border-subtle: rgba(255, 255, 255, 0.08);   /* 1px hairline borders */
   --border-strong: rgba(255, 255, 255, 0.16);   /* hover-state hairlines */
-  --glow-accent: rgba(57, 255, 20, 0.28);       /* acid illumination */
+  --glow-accent: rgba(255, 0, 51, 0.30);        /* bloodline illumination */
   --glow-size: 0.1em;
   --tracking-display: -0.04em;     /* razor-tight display tracking */
   --tracking-brutal: -0.05em;      /* mega hero tracking */
@@ -52,7 +52,7 @@ body {
     pointer-events: none;
     background: radial-gradient(
       ellipse 80% 50% at 50% -10%,
-      rgba(57, 255, 20, 0.045) 0%,
+      rgba(255, 0, 51, 0.05) 0%,
       transparent 60%
     );
     z-index: -1;

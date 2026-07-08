@@ -1,13 +1,13 @@
 // ============================================================================
 // Isolated Command — Cyber-Streetwear × Elite Engineering layer
 // (Lusion / Unseen / Valorant-HUD benchmark. Loaded last: wins the cascade.)
-// Rules: true-black stage · 1px hairlines · Electric Acid Green (#39FF14)
-// reserved for interactive feedback and node illumination · brutalist Anton
-// display type · JetBrains Mono for labels & metrics · cinematic spacing.
+// Rules: true-black stage · 1px hairlines · Bloodline Red (#FF0033) reserved
+// for interactive feedback, typographic highlights and node illumination ·
+// brutalist Anton display type · JetBrains Mono labels · Inter long-form prose.
 // ============================================================================
 
-// ---- selection: interaction, therefore acid ---------------------------------
-::selection { background: var(--color-accent); color: #000; }
+// ---- selection: interaction, therefore bloodline ------------------------------
+::selection { background: var(--color-accent); color: #fff; }
 
 // ---- display typography ------------------------------------------------------
 h1, h2 {
@@ -138,7 +138,7 @@ h1, h2 {
 }
 @keyframes ic-node-pulse {
   0%, 100% { box-shadow: 0 0 0 0 var(--glow-accent); }
-  50%      { box-shadow: 0 0 0 6px rgba(57, 255, 20, 0); }
+  50%      { box-shadow: 0 0 0 6px rgba(255, 0, 51, 0); }
 }
 
 // ---- ticker: the recruitment marquee ---------------------------------------------
@@ -310,6 +310,134 @@ h1, h2 {
   &.d-3 { animation-delay: 0.3s; }
   &.d-4 { animation-delay: 0.44s; }
   &.d-5 { animation-delay: 0.6s; }
+}
+
+// ---- editorial prose: the Publisher Markdown reading layer -----------------------
+// Long-form content (docs pages, dispatches, learn posts) renders inside
+// .post-content. This is the "typography plugin" of the theme: a premium
+// whitepaper register — Inter at a ~70ch measure, bloodline-accented links and
+// rules, mono metrics — so markdown written by any child site reads like
+// high-end editorial with zero extra markup.
+.post-content {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--color-text-light);
+  max-width: 70ch;
+
+  p { color: var(--color-text-light); opacity: 0.92; }
+
+  a {
+    color: var(--color-text-light);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-accent);
+    transition: color 0.18s ease, border-color 0.18s ease;
+
+    &:hover { color: var(--color-accent); }
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    font-size: clamp(26px, 3.2vw, 38px);
+    margin: 2.6em 0 0.8em;
+  }
+
+  h3, h4 {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: var(--tracking-intel);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 2.4em 0 0.9em;
+  }
+
+  strong { color: #fff; }
+
+  mark, .ic-highlight {
+    background: transparent;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  blockquote {
+    border-left: 2px solid var(--color-accent);
+    background: rgba(255, 0, 51, 0.05);
+    padding: 0.6rem 1.4rem;
+    margin: 1.8rem 0;
+    font-style: normal;
+
+    p { opacity: 0.85; }
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--border-subtle);
+    padding: 0.12em 0.45em;
+    color: var(--color-text-light);
+  }
+
+  pre {
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    padding: 1.4rem;
+    overflow-x: auto;
+    margin: 1.8rem 0;
+
+    code { background: transparent; border: 0; padding: 0; }
+  }
+
+  table {
+    width: 100%;
+    margin: 1.8rem 0;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+
+    th {
+      text-align: left;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      border-bottom: 1px solid var(--border-strong);
+      padding: 0.6rem 0.8rem;
+      background: transparent;
+    }
+
+    td {
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.6rem 0.8rem;
+    }
+
+    tr:hover td { background: rgba(255, 255, 255, 0.025); }
+  }
+
+  hr {
+    border: 0;
+    height: 1px;
+    margin: 3rem 0;
+    background: linear-gradient(90deg, var(--color-accent), var(--border-subtle) 30%, transparent);
+  }
+
+  ul li::marker { color: var(--color-accent); }
+  ol li::marker {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+
+  img {
+    border: 1px solid var(--border-subtle);
+    max-width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
