@@ -446,21 +446,84 @@ h1, h2 {
   .ic-status { animation: none; }
 }
 
-.cert-grid{margin-top:24px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
-.team-card.cert-card{text-decoration:none;height:100%; transition: all 0.3s ease;}
-.cert-card .cert-cover{margin:-24px -18px 16px;border-radius:12px 12px 0 0;overflow:hidden;
-  aspect-ratio:4/3;background:rgba(255,255,255,.02);
-  display:flex;align-items:center;justify-content:center;
-  border-bottom:1px solid rgba(255,0,51,.3);} 
-.cert-card .cert-cover img{width:100%;height:100%;object-fit:contain;
-  transition:transform .3s cubic-bezier(0.16, 1, 0.3, 1);}
-.cert-card:hover .cert-cover img{transform:scale(1.08);}
-.cert-card:hover{box-shadow: 0 4px 20px rgba(255,0,51,0.15);}
-.cert-card .cert-icon{width:88px;height:88px;margin:16px auto 16px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,0,51,.10);border:2px solid #FF0033; 
-  color:#FF0033;font-size:34px; transition: all 0.3s ease;}
-.cert-card .team-name{line-height:1.35; font-family: 'Anton', sans-serif; letter-spacing: -0.02em; text-transform: uppercase;}
-.cert-card:hover .cert-icon{background:rgba(255,0,51,.25); box-shadow: 0 0 15px rgba(255,0,51,0.4);}
-.cert-group-label{margin:38px 0 2px;font-size:13px;letter-spacing:.14em;
-  text-transform:uppercase;opacity:.8;color:#FF0033;text-align:left; font-weight: bold;}
+// Define the primary brand colour for easy updating
+$bloodline-red: #FF0033;
+
+.cert-grid {
+  margin-top: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.cert-group-label {
+  margin: 38px 0 2px;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  color: $bloodline-red;
+  text-align: left;
+  font-weight: bold;
+}
+
+.team-card.cert-card {
+  text-decoration: none;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.cert-card {
+  // Hover states for the main card and its children
+  &:hover {
+    box-shadow: 0 4px 20px rgba($bloodline-red, 0.15);
+    
+    .cert-cover img {
+      transform: scale(1.08);
+    }
+    
+    .cert-icon {
+      background: rgba($bloodline-red, 0.25);
+      box-shadow: 0 0 15px rgba($bloodline-red, 0.4);
+    }
+  }
+
+  .cert-cover {
+    margin: -24px -18px 16px;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba($bloodline-red, 0.3);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  }
+
+  .cert-icon {
+    width: 88px;
+    height: 88px;
+    margin: 16px auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($bloodline-red, 0.10);
+    border: 2px solid $bloodline-red;
+    color: $bloodline-red;
+    font-size: 34px;
+    transition: all 0.3s ease;
+  }
+
+  .team-name {
+    line-height: 1.35;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+}
