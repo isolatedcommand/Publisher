@@ -3,41 +3,35 @@
 <!-- banner -->
 {{ with .Params.banner }}
 {{ if .enable }}
-<section class="slider {{ if .bg_overlay }}overly{{ end }}" style="background-image: url('{{ .bg_image | relURL }}');">
-  <div class="container">
+<section class="slider ic-hero {{ if .bg_overlay }}overly{{ end }}" style="background-image: url('{{ .bg_image | relURL }}');">
+  <div class="glow-behind" aria-hidden="true"></div>
+  <div class="container" style="position:relative;z-index:1;">
     <div class="row">
       <div class="col-md-12">
         <div class="block">
 
+          {{ with .eyebrow }}<p class="ic-hero-eyebrow reveal-up">{{ . | markdownify }}</p>{{ end }}
 
-          {{ with .isolated }}<h1 style="color:#e80f12;" data-typing>&lt;{{ . | markdownify }}/&gt;</h1>{{ end }}
-          {{ with .command }}<h1 style="color:#3071c4;" data-typing>{{ . | markdownify }}</h1>{{ end }}
-          {{ with .slogan }}<h4 style="color:var(--color-text-light);">{{ . | markdownify }}</h4>{{ end }}
-          {{ with .button1 }}
-          {{ if .enable }}
-          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
+          {{/* Cinematic headline; falls back to the legacy isolated/command brand marks. */}}
+          {{ if .headline }}
+          <h1 class="ic-hero-headline reveal-up d-1">{{ .headline | markdownify }}</h1>
+          {{ else }}
+          {{ with .isolated }}<h1 class="reveal-up d-1" style="color:#e80f12;" data-typing>&lt;{{ . | markdownify }}/&gt;</h1>{{ end }}
+          {{ with .command }}<h1 class="reveal-up d-2" style="color:#3071c4;" data-typing>{{ . | markdownify }}</h1>{{ end }}
           {{ end }}
-          {{ end }}
-          {{ with .button2 }}
-          {{ if .enable }}
-          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
-          {{ end }}
-          {{ end }}
-          {{ with .button3 }}
-          {{ if .enable }}
-          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
-          {{ end }}
-          {{ end }}
-          {{ with .button4 }}
-          {{ if .enable }}
-          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
-          {{ end }}
-          {{ end }}
-          {{ with .button5 }}
-          {{ if .enable }}
-          <br><a href="{{ .link | relLangURL }}" class="btn btn-main animated fadeInUp">{{ .label }}</a><br>
-          {{ end }}
-          {{ end }}
+
+          {{ with .sub_headline }}<h4 class="ic-hero-sub reveal-up d-3">{{ . | markdownify }}</h4>{{ end }}
+          {{ with .slogan }}<h4 class="reveal-up d-3" style="color:var(--color-text-muted);">{{ . | markdownify }}</h4>{{ end }}
+
+          {{/* CTA row: button1 = primary, button2 = ghost; the rest stay primary
+               for backwards compatibility with existing sites. */}}
+          <div class="ic-hero-actions reveal-up d-4">
+            {{ with .button1 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-main">{{ .label }}</a>{{ end }}{{ end }}
+            {{ with .button2 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-ghost">{{ .label }}</a>{{ end }}{{ end }}
+            {{ with .button3 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-main">{{ .label }}</a>{{ end }}{{ end }}
+            {{ with .button4 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-main">{{ .label }}</a>{{ end }}{{ end }}
+            {{ with .button5 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-main">{{ .label }}</a>{{ end }}{{ end }}
+          </div>
 
         </div>
       </div>

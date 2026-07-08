@@ -1,0 +1,211 @@
+// ============================================================================
+// Isolated Command — Premium OLED layer (Linear / Vercel / Stripe benchmark)
+// Loaded last: these rules deliberately win the cascade over legacy templates.
+// Principles: pitch-black surfaces · 1px hairlines · one sparing cyan accent ·
+// tight display tracking · cinematic negative space · no heavy drop shadows.
+// ============================================================================
+
+// ---- Frosted-glass navigation ----------------------------------------------
+.navigation {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: none;
+  padding: 14px 0;
+
+  .navbar-nav li a {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    letter-spacing: 0;
+    transition: color 0.18s ease;
+
+    &:hover, &:focus {
+      color: var(--color-text-light);
+      background: transparent;
+    }
+  }
+}
+
+// ---- Button system ----------------------------------------------------------
+// Primary: hairline border that illuminates cyan on hover (no fill flood).
+.btn-main,
+.btn-default,
+.btn-view-works {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-light);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 13px 30px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.15s ease;
+
+  &:hover, &:focus {
+    background: rgba(34, 211, 238, 0.06);
+    color: var(--color-text-light);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--glow-accent), 0 0 24px -6px var(--glow-accent);
+    transform: translateY(-1px);
+  }
+}
+
+// Ghost: minimalist — text + hairline only.
+.btn-ghost,
+.btn-solid-border {
+  display: inline-block;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 13px 30px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+
+  &:hover, &:focus {
+    background: transparent;
+    color: var(--color-text-light);
+    border-color: var(--border-strong);
+  }
+}
+
+.btn-small { padding: 9px 20px; font-size: 13px; border-radius: 7px; }
+
+// ---- Cinematic section rhythm ----------------------------------------------
+.section { padding: 128px 0; }
+.section-sm { padding: 88px 0; }
+.section .title, .section-title { margin-bottom: 56px; }
+
+// ---- Surfaces: hairlines instead of shadows ---------------------------------
+.card,
+.go-step,
+.file-step {
+  background: var(--color-bg-accent);
+  border: 1px solid var(--border-subtle);
+  box-shadow: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: none;
+  }
+}
+
+// ---- Hero (slider) — cinematic ----------------------------------------------
+.slider {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 200px 0 220px;
+
+  // kill the CRT scanline overlay from the legacy theme
+  &::after { display: none; }
+
+  .block {
+    h1 {
+      font-weight: 700;
+      letter-spacing: var(--tracking-display);
+      text-transform: none;
+      line-height: 1.05;
+    }
+    h4 {
+      font-weight: 400;
+      color: var(--color-text-muted);
+      letter-spacing: 0;
+      line-height: 1.6;
+    }
+  }
+}
+
+// ---- Hero content (ic-hero) ---------------------------------------------------
+.ic-hero { position: relative; overflow: hidden; }
+
+.ic-hero-eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 6px 16px;
+  margin-bottom: 28px;
+}
+
+.ic-hero-headline {
+  font-size: clamp(44px, 7.5vw, 88px);
+  letter-spacing: var(--tracking-display);
+  line-height: 1.04;
+  color: var(--color-text-light);
+  margin: 0 auto 24px;
+  max-width: 18ch;
+}
+
+.ic-hero-sub {
+  font-size: clamp(17px, 2vw, 21px);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  max-width: 44ch;
+  margin: 0 auto 40px;
+}
+
+.ic-hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+// ---- Utilities ---------------------------------------------------------------
+// Radial glow behind key text (place inside a position:relative parent).
+.glow-behind {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  width: min(820px, 85vw);
+  height: 420px;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, var(--glow-accent) 0%, transparent 65%);
+  opacity: 0.5;
+  filter: blur(28px);
+  z-index: 0;
+}
+
+// Muted secondary text helper
+.text-muted, .text-secondary { color: var(--color-text-muted) !important; }
+
+// ---- Motion: cinematic bottom-up reveal --------------------------------------
+@keyframes ic-reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal-up {
+  opacity: 0;
+  animation: ic-reveal-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  &.d-1 { animation-delay: 0.08s; }
+  &.d-2 { animation-delay: 0.18s; }
+  &.d-3 { animation-delay: 0.3s; }
+  &.d-4 { animation-delay: 0.44s; }
+  &.d-5 { animation-delay: 0.6s; }
+}
+
+// Hairline divider that reads as an illuminated 1px line
+.hairline-glow {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) no-repeat center / 100% 1px;
+}
+
+// Respect users who prefer reduced motion.
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up { animation: none; opacity: 1; transform: none; }
+}

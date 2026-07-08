@@ -1,31 +1,43 @@
-// Isolated Command — theme styles
-// Brand: #e80f12 (red), #3071c4 (blue), warm dark background
+// Isolated Command — premium OLED design system
+// Brand marks: #e80f12 (red <IC/>), #3071c4 (blue COMMAND) — logo/identity contexts.
+// Interaction accent: one electric cyan, used sparingly (hover states, 1px borders).
+// Benchmarks: Linear / Vercel / Stripe — pitch-black surfaces, hairline borders,
+// tight display tracking, cinematic negative space, no heavy drop shadows.
 
 :root {
-  --color-primary: #e80f12;        /* Red (Isolated tag) */
-  --color-secondary: #3071c4;      /* Blue (Command text) */
+  --color-primary: #e80f12;        /* Brand red (Isolated tag) */
+  --color-secondary: #3071c4;      /* Brand blue (Command text) */
   --color-tertiary: #2a5ab5;       /* Dark blue accent */
-  --color-bg-dark: #1a1410;        /* Warm dark brown-black */
-  --color-bg-darker: #0f0d0a;      /* Darker warm variant */
-  --color-bg-accent: #2a2218;      /* Warm accent layer */
-  --color-text-light: #E8E4E0;     /* Warm off-white */
-  --color-text-muted: #C4BFB6;     /* Warm muted gray (raised for WCAG contrast) */
-  --color-accent-1: #e80f12;       /* Red accent */
-  --color-accent-2: #3071c4;       /* Blue accent */
+  --color-bg-dark: #0A0A0A;        /* OLED near-black surface */
+  --color-bg-darker: #000000;      /* True black base */
+  --color-bg-accent: #111113;      /* Elevated surface (cards, panels) */
+  --color-text-light: #FAFAFA;     /* Stark high-contrast white */
+  --color-text-muted: #A1A1AA;     /* Muted zinc for secondary text */
+  --color-accent-1: #e80f12;       /* Brand red */
+  --color-accent-2: #3071c4;       /* Brand blue */
+  --color-accent: #22D3EE;         /* THE accent — electric cyan, use sparingly */
+  --border-subtle: rgba(255, 255, 255, 0.08);   /* 1px hairline borders */
+  --border-strong: rgba(255, 255, 255, 0.16);   /* hover-state hairlines */
+  --glow-accent: rgba(34, 211, 238, 0.22);      /* accent illumination */
   --glow-size: 0.1em;
+  --tracking-display: -0.04em;     /* razor-tight display tracking */
+  --font-sans: 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Poppins', sans-serif;
 }
 
-// Base Dark Theme - Warm & Cozy
+// Base — OLED
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: transparent; // starfield layer provides the warm gradient base
+  background: transparent; // starfield layer provides the black base
   color: var(--color-text-light);
-  font-family: 'Poppins', sans-serif;
-  line-height: 1.6;
+  font-family: var(--font-sans);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 
+  // One faint, off-center radial glow — no scanlines, no texture noise.
   &::before {
     content: '';
     position: fixed;
@@ -34,28 +46,20 @@ body {
     right: 0;
     bottom: 0;
     pointer-events: none;
-    background:
-      repeating-linear-gradient(
-        0deg,
-        rgba(232, 228, 224, 0.02),
-        rgba(232, 228, 224, 0.02) 2px,
-        transparent 2px,
-        transparent 4px
-      ),
-      radial-gradient(
-        ellipse at 50% 50%,
-        rgba(0, 168, 204, 0.05) 0%,
-        transparent 50%
-      );
+    background: radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      rgba(34, 211, 238, 0.06) 0%,
+      transparent 60%
+    );
     z-index: -1;
   }
 }
 
-// Typography
+// Typography — tight display tracking, generous body leading
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-light);
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tracking-display);
   margin-bottom: 1.2rem;
 }
 
