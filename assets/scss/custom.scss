@@ -277,7 +277,7 @@ h1, h2 {
   left: 50%;
   top: 40%;
   transform: translate(-50%, -50%);
-  width: min(820px, 85vw);
+  width: unquote("min(820px, 85vw)"); // unquote: keep libsass from evaluating CSS min()
   height: 420px;
   pointer-events: none;
   background: radial-gradient(ellipse at center, var(--glow-accent) 0%, transparent 65%);
