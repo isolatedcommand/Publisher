@@ -31,6 +31,9 @@ AUTHOR WEBSITE: https://isolatedcommand.com
 		<div id="stars3"></div>
 	</div>
 
+	{{/* Interactive data-grid field (opt-in: particle_grid = true in [params]) */}}
+	{{ if site.Params.particle_grid }}{{ partial "particle-grid.html" . }}{{ end }}
+
 	<!-- Print/PDF header: logo + source URL (only visible when printing) -->
 	{{ $print_url := .Permalink }}
 	{{ with site.Params.canonical_base }}{{ $print_url = printf "%s%s" (strings.TrimSuffix "/" .) $.RelPermalink }}{{ end }}

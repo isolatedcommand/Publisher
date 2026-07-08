@@ -1,0 +1,7 @@
+{{/* Interactive data-grid field. Opt in per site with `particle_grid = true`
+     in [params]. Sits above the starfield (z -9 vs -10), below all content.
+     Pure vanilla JS — no dependencies, ~2 KB minified. */}}
+<canvas id="ic-particle-grid" aria-hidden="true"
+  style="position:fixed;inset:0;z-index:-9;pointer-events:none;"></canvas>
+{{ $grid := resources.Get "js/particle-grid.js" | minify | fingerprint "sha512" }}
+<script defer src="{{ $grid.RelPermalink }}" integrity="{{ $grid.Data.Integrity }}" crossorigin="anonymous"></script>

@@ -37,6 +37,15 @@
       </div>
     </div>
   </div>
+
+  {{/* Recruitment ticker — set `ticker` in the banner front matter. */}}
+  {{ with .ticker }}
+  <div class="ic-ticker">
+    <div class="ic-ticker-track">
+      <span>{{ . }}&nbsp;//&nbsp;</span><span aria-hidden="true">{{ . }}&nbsp;//&nbsp;</span>
+    </div>
+  </div>
+  {{ end }}
 </section>
 {{ end }}
 {{ end }}

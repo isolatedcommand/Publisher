@@ -1,11 +1,22 @@
 // ============================================================================
-// Isolated Command — Premium OLED layer (Linear / Vercel / Stripe benchmark)
-// Loaded last: these rules deliberately win the cascade over legacy templates.
-// Principles: pitch-black surfaces · 1px hairlines · one sparing cyan accent ·
-// tight display tracking · cinematic negative space · no heavy drop shadows.
+// Isolated Command — Cyber-Streetwear × Elite Engineering layer
+// (Lusion / Unseen / Valorant-HUD benchmark. Loaded last: wins the cascade.)
+// Rules: true-black stage · 1px hairlines · Electric Acid Green (#39FF14)
+// reserved for interactive feedback and node illumination · brutalist Anton
+// display type · JetBrains Mono for labels & metrics · cinematic spacing.
 // ============================================================================
 
-// ---- Frosted-glass navigation ----------------------------------------------
+// ---- selection: interaction, therefore acid ---------------------------------
+::selection { background: var(--color-accent); color: #000; }
+
+// ---- display typography ------------------------------------------------------
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 400;               // Anton carries weight in its skeleton
+  letter-spacing: var(--tracking-display);
+}
+
+// ---- frosted-glass navigation (mono, tactical) --------------------------------
 .navigation {
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(16px) saturate(1.4);
@@ -16,78 +27,82 @@
 
   .navbar-nav li a {
     color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
     font-weight: 500;
-    letter-spacing: 0;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     transition: color 0.18s ease;
 
     &:hover, &:focus {
-      color: var(--color-text-light);
+      color: var(--color-accent);
       background: transparent;
     }
   }
 }
 
-// ---- Button system ----------------------------------------------------------
-// Primary: hairline border that illuminates cyan on hover (no fill flood).
+// ---- button system: streetwear-square, mono, acid feedback --------------------
 .btn-main,
 .btn-default,
 .btn-view-works {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--color-text-light);
-  border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  padding: 13px 30px;
-  font-size: 15px;
+  background: var(--color-text-light);
+  color: #000;
+  border: 1px solid var(--color-text-light);
+  border-radius: 0;
+  padding: 15px 32px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
+  letter-spacing: var(--tracking-intel);
+  text-transform: uppercase;
   box-shadow: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover, &:focus {
-    background: rgba(34, 211, 238, 0.06);
-    color: var(--color-text-light);
+    background: #000;
+    color: var(--color-accent);
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--glow-accent), 0 0 24px -6px var(--glow-accent);
+    box-shadow: 0 0 32px -8px var(--glow-accent);
     transform: translateY(-1px);
   }
 }
 
-// Ghost: minimalist — text + hairline only.
 .btn-ghost,
 .btn-solid-border {
   display: inline-block;
   background: transparent;
-  color: var(--color-text-muted);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 13px 30px;
-  font-size: 15px;
+  color: var(--color-text-light);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  padding: 15px 32px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  letter-spacing: var(--tracking-intel);
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover, &:focus {
     background: transparent;
-    color: var(--color-text-light);
-    border-color: var(--border-strong);
+    color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 }
 
-.btn-small { padding: 9px 20px; font-size: 13px; border-radius: 7px; }
+.btn-small { padding: 10px 20px; font-size: 11px; }
 
-// ---- Cinematic section rhythm ----------------------------------------------
+// ---- cinematic section rhythm --------------------------------------------------
 .section { padding: 128px 0; }
 .section-sm { padding: 88px 0; }
 .section .title, .section-title { margin-bottom: 56px; }
 
-// ---- Surfaces: hairlines instead of shadows ---------------------------------
+// ---- surfaces: hairlines, never shadows ----------------------------------------
 .card,
 .go-step,
 .file-step {
   background: var(--color-bg-accent);
   border: 1px solid var(--border-subtle);
+  border-radius: 0;
   box-shadow: none;
   transition: border-color 0.2s ease, transform 0.2s ease;
 
@@ -97,62 +112,99 @@
   }
 }
 
-// ---- Hero (slider) — cinematic ----------------------------------------------
-.slider {
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 200px 0 220px;
-
-  // kill the CRT scanline overlay from the legacy theme
-  &::after { display: none; }
-
-  .block {
-    h1 {
-      font-weight: 700;
-      letter-spacing: var(--tracking-display);
-      text-transform: none;
-      line-height: 1.05;
-    }
-    h4 {
-      font-weight: 400;
-      color: var(--color-text-muted);
-      letter-spacing: 0;
-      line-height: 1.6;
-    }
-  }
+// ---- intel label: mono classification eyebrow -----------------------------------
+// Markdown-friendly: <p class="ic-intel">SITUATION BRIEF // THE GAP</p>
+.ic-intel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-intel);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
 }
 
-// ---- Hero content (ic-hero) ---------------------------------------------------
+// ---- status node: pulsing acid dot ----------------------------------------------
+// <span class="ic-status"></span> SYSTEM: OPERATIONAL
+.ic-status {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: ic-node-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes ic-node-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--glow-accent); }
+  50%      { box-shadow: 0 0 0 6px rgba(57, 255, 20, 0); }
+}
+
+// ---- ticker: the recruitment marquee ---------------------------------------------
+// Rendered by the banner's `ticker` front-matter param (see index.html).
+.ic-ticker {
+  overflow: hidden;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 9px 0;
+
+  .ic-ticker-track {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    animation: ic-ticker 30s linear infinite;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: var(--tracking-intel);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+}
+@keyframes ic-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+// ---- hero (ic-hero): brutalist mega type ------------------------------------------
 .ic-hero { position: relative; overflow: hidden; }
+.ic-hero .ic-ticker { position: absolute; left: 0; right: 0; bottom: 0; }
 
 .ic-hero-eyebrow {
   display: inline-block;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--tracking-intel);
   text-transform: uppercase;
   color: var(--color-text-muted);
   border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  padding: 6px 16px;
-  margin-bottom: 28px;
+  padding: 7px 18px;
+  margin-bottom: 32px;
 }
 
 .ic-hero-headline {
-  font-size: clamp(44px, 7.5vw, 88px);
-  letter-spacing: var(--tracking-display);
-  line-height: 1.04;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 9.5vw, 8.5rem);
+  letter-spacing: var(--tracking-brutal);
+  line-height: 0.94;
+  text-transform: uppercase;
   color: var(--color-text-light);
-  margin: 0 auto 24px;
-  max-width: 18ch;
+  margin: 0 auto 28px;
+  max-width: 16ch;
 }
 
 .ic-hero-sub {
+  font-family: var(--font-sans);
   font-size: clamp(17px, 2vw, 21px);
   font-weight: 400;
   color: var(--color-text-muted);
   line-height: 1.65;
-  max-width: 44ch;
-  margin: 0 auto 40px;
+  letter-spacing: 0;
+  text-transform: none;
+  max-width: 46ch;
+  margin: 0 auto 44px;
 }
 
 .ic-hero-actions {
@@ -162,8 +214,64 @@
   flex-wrap: wrap;
 }
 
-// ---- Utilities ---------------------------------------------------------------
-// Radial glow behind key text (place inside a position:relative parent).
+// ---- pipeline timeline: hairline spine + acid nodes --------------------------------
+// Markdown-friendly structure (goldmark unsafe HTML in any content file):
+//   <div class="ic-pipeline">
+//     <div class="ic-stage"><p class="ic-stage-code">STAGE_01 // 48 HOURS</p>
+//       <h3>The Code Red Challenge</h3><p>…</p></div>
+//   </div>
+.ic-pipeline {
+  position: relative;
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 40px;
+  margin: 48px 0;
+  text-align: left;
+
+  .ic-stage {
+    position: relative;
+    padding-bottom: 56px;
+
+    &:last-child { padding-bottom: 0; }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -46px;
+      top: 6px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--color-bg-darker);
+      border: 1px solid var(--border-strong);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover::before {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      box-shadow: 0 0 18px 2px var(--glow-accent);
+    }
+
+    .ic-stage-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: var(--tracking-intel);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 10px;
+    }
+
+    h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+    }
+  }
+}
+
+// ---- utilities -----------------------------------------------------------------------
 .glow-behind {
   position: absolute;
   left: 50%;
@@ -173,23 +281,29 @@
   height: 420px;
   pointer-events: none;
   background: radial-gradient(ellipse at center, var(--glow-accent) 0%, transparent 65%);
-  opacity: 0.5;
+  opacity: 0.35;
   filter: blur(28px);
   z-index: 0;
 }
 
-// Muted secondary text helper
 .text-muted, .text-secondary { color: var(--color-text-muted) !important; }
 
-// ---- Motion: cinematic bottom-up reveal --------------------------------------
+.hairline-glow {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) no-repeat center / 100% 1px;
+}
+
+// ---- motion: kinetic snap-up reveal -----------------------------------------------
 @keyframes ic-reveal-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(32px) skewY(1.2deg); }
+  60%  { opacity: 1; transform: translateY(-4px) skewY(-0.3deg); }
+  to   { opacity: 1; transform: translateY(0) skewY(0); }
 }
 
 .reveal-up {
   opacity: 0;
-  animation: ic-reveal-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: ic-reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   &.d-1 { animation-delay: 0.08s; }
   &.d-2 { animation-delay: 0.18s; }
@@ -198,14 +312,8 @@
   &.d-5 { animation-delay: 0.6s; }
 }
 
-// Hairline divider that reads as an illuminated 1px line
-.hairline-glow {
-  height: 1px;
-  border: 0;
-  background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) no-repeat center / 100% 1px;
-}
-
-// Respect users who prefer reduced motion.
 @media (prefers-reduced-motion: reduce) {
   .reveal-up { animation: none; opacity: 1; transform: none; }
+  .ic-ticker .ic-ticker-track { animation: none; }
+  .ic-status { animation: none; }
 }
