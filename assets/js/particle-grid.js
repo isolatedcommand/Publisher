@@ -10,7 +10,7 @@
  *               scatter hard and glide home.
  *   discipline: scroll depth calms the field (1 → 0.15) as the visitor moves
  *               from the hype drop into the working content.
- *   acid      : #39FF14 illuminates ONLY as a function of displacement energy.
+ *   bloodline : #FF0033 illuminates ONLY as a function of displacement energy.
  *
  * Perf: ~1.2k nodes, one rAF loop, no allocations per frame, DPR-capped at 2,
  * paused when the tab is hidden. Reduced-motion renders a static grid.
@@ -27,7 +27,7 @@
   var SPACING = 46;          // px between nodes
   var SIGMA = 130;           // blast radius (px)
   var BASE = { r: 138, g: 138, b: 144 };   // architectural grey
-  var ACID = { r: 57, g: 255, b: 20 };     // electric acid green
+  var ACID = { r: 255, g: 0, b: 51 };      // Bloodline Red — node illumination
 
   var mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999, lastX: 0, lastY: 0, has: false };
   var force = 0, forceTarget = 0;
