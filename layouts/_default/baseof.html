@@ -67,6 +67,10 @@ AUTHOR WEBSITE: https://isolatedcommand.com
 	{{ partial "footer.html" . }}
 	{{ partial "script.html" . }}
 	{{ end }}
+
+	{{/* Motion engine: scroll-reveals + page-transition cooperation (all pages) */}}
+	{{ $motion := resources.Get "js/ic-motion.js" | minify | fingerprint "sha512" }}
+	<script defer src="{{ $motion.RelPermalink }}" integrity="{{ $motion.Data.Integrity }}" crossorigin="anonymous"></script>
 </body>
 
 </html>

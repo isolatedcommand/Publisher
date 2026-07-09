@@ -16,8 +16,8 @@
           {{ if .headline }}
           <h1 class="ic-hero-headline reveal-up d-1">{{ .headline | markdownify }}</h1>
           {{ else }}
-          {{ with .isolated }}<h1 class="reveal-up d-1" style="color:#e80f12;" data-typing>&lt;{{ . | markdownify }}/&gt;</h1>{{ end }}
-          {{ with .command }}<h1 class="reveal-up d-2" style="color:#3071c4;" data-typing>{{ . | markdownify }}</h1>{{ end }}
+          {{ with .isolated }}<h1 class="reveal-up d-1" style="color:#e80f12;">&lt;{{ . | markdownify }}/&gt;</h1>{{ end }}
+          {{ with .command }}<h1 class="reveal-up d-2" style="color:#3071c4;">{{ . | markdownify }}</h1>{{ end }}
           {{ end }}
 
           {{ with .sub_headline }}<h4 class="ic-hero-sub reveal-up d-3">{{ . | markdownify }}</h4>{{ end }}

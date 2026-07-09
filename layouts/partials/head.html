@@ -1,5 +1,18 @@
 <meta charset="utf-8">
 <title>{{.Title | default site.Title}}</title>
+{{/* Mark JS available before first paint so scroll-reveals hide cleanly (and
+     content is always visible if JS is absent/blocked — never stranded).
+     The load-timeout is a self-contained safety net: even if ic-motion.js
+     fails to load, nothing stays hidden more than ~1.6s after load. */}}
+<script>
+document.documentElement.className += ' js';
+addEventListener('load', function () {
+  setTimeout(function () {
+    var n = document.querySelectorAll('.reveal-up:not(.in)');
+    for (var i = 0; i < n.length; i++) n[i].classList.add('in');
+  }, 1600);
+});
+</script>
 
 
 <!-- Consent Mode must run before any Google tag -->

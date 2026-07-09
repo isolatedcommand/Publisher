@@ -296,23 +296,37 @@ h1, h2 {
   background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent) no-repeat center / 100% 1px;
 }
 
-// ---- motion: kinetic snap-up reveal -----------------------------------------------
-@keyframes ic-reveal-up {
-  from { opacity: 0; transform: translateY(32px) skewY(1.2deg); }
-  60%  { opacity: 1; transform: translateY(-4px) skewY(-0.3deg); }
-  to   { opacity: 1; transform: translateY(0) skewY(0); }
-}
-
-.reveal-up {
+// ---- motion: kinetic reveal (progressive enhancement) -----------------------------
+// Content is ALWAYS visible by default. Only when JS is confirmed present
+// (html.js) do we hide-then-reveal — so a JS error, blocked script, or missing
+// animation can never strand the hero (or any content) at opacity 0.
+// ic-motion.js observes .reveal-up and adds .in as it scrolls into view.
+.js .reveal-up {
   opacity: 0;
-  animation: ic-reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-  &.d-1 { animation-delay: 0.08s; }
-  &.d-2 { animation-delay: 0.18s; }
-  &.d-3 { animation-delay: 0.3s; }
-  &.d-4 { animation-delay: 0.44s; }
-  &.d-5 { animation-delay: 0.6s; }
+  transform: translateY(26px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
+.js .reveal-up.in {
+  opacity: 1;
+  transform: none;
+}
+.js .reveal-up {
+  &.d-1 { transition-delay: 0.05s; }
+  &.d-2 { transition-delay: 0.14s; }
+  &.d-3 { transition-delay: 0.24s; }
+  &.d-4 { transition-delay: 0.36s; }
+  &.d-5 { transition-delay: 0.5s; }
+}
+
+// Cross-document page transitions — smooth fade between pages (Chromium).
+// Progressive enhancement: unsupported browsers just navigate normally.
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: ic-vt-out 0.28s cubic-bezier(0.4, 0, 1, 1) both; }
+::view-transition-new(root) { animation: ic-vt-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes ic-vt-out { to { opacity: 0; transform: translateY(-8px) scale(0.995); } }
+@keyframes ic-vt-in  { from { opacity: 0; transform: translateY(10px) scale(1.004); } }
 
 // ---- editorial prose: the Publisher Markdown reading layer -----------------------
 // Long-form content (docs pages, dispatches, learn posts) renders inside
@@ -443,9 +457,11 @@ h1, h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal-up { animation: none; opacity: 1; transform: none; }
+  .js .reveal-up { opacity: 1; transform: none; transition: none; }
   .ic-ticker .ic-ticker-track { animation: none; }
   .ic-status { animation: none; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
 }
 
 // Define the primary brand colour for easy updating
