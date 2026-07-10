@@ -162,14 +162,19 @@
         redPoints.rotation.x = t * 0.02;
       }
 
-      // The whole scene travels WITH the scroll: object drifts up + camera pans
-      // down through the depth-field, so scrolling visibly moves the 3D.
-      blob.position.y = damp(blob.position.y, scroll * 4.5, 3, dt);
-      shell.position.y = blob.position.y;
-      camera.position.x = damp(camera.position.x, mouse.sx * 1.1, 3, dt);
-      camera.position.y = damp(camera.position.y, -mouse.sy * 0.8 + scroll * 6.0, 3, dt);
+      // The object rides BESIDE the content column and weaves sides as you
+      // scroll (right at the hero, left mid-page, right again) — inline with
+      // the words instead of floating behind them. Camera stays anchored;
+      // only gentle cursor parallax, so the scene never flies away.
+      var weave = scroll * Math.PI * 2.0;
+      blob.position.x = damp(blob.position.x, Math.cos(weave) * 3.1, 3, dt);
+      blob.position.y = damp(blob.position.y, Math.sin(weave) * 1.1, 3, dt);
+      blob.position.z = damp(blob.position.z, -Math.abs(Math.sin(weave)) * 1.2, 3, dt);
+      shell.position.copy(blob.position);
+      camera.position.x = damp(camera.position.x, mouse.sx * 0.7, 3, dt);
+      camera.position.y = damp(camera.position.y, -mouse.sy * 0.5, 3, dt);
       camera.position.z = 6.4;
-      camera.lookAt(0, scroll * 5.2, 0);
+      camera.lookAt(blob.position.x * 0.5, blob.position.y * 0.5, 0);
 
       renderer.render(scene, camera);
       if (!reduce) requestAnimationFrame(frame);
