@@ -1,8 +1,11 @@
 {{/* Interactive WebGL background, opt in per site with `particle_grid = true`.
-     If `webgl_3d = true`, load the Three.js 3D scene (morphing wireframe object +
-     parallax particle depth); it auto-falls back to the dependency-free raw-WebGL
-     flow-field (data-fallback) if Three is blocked or init fails.
-     Sits above the starfield (z -9 vs -10), below all content. */}}
+     `webgl_3d = true` loads the heavy Three.js 3D scene (morphing wireframe object +
+     parallax depth) on the HOMEPAGE ONLY; every other page (articles, sub-pages)
+     gets the lightweight dependency-free raw-WebGL flow-field. So the wow lives on
+     the landing page and content pages stay fast (no Three.js payload).
+     Set `webgl_3d_everywhere = true` to force the 3D scene on all pages.
+     Three auto-falls back to the raw field (data-fallback) if blocked/init fails. */}}
+{{ $use3d := and site.Params.webgl_3d (or .IsHome site.Params.webgl_3d_everywhere) }}
 {{ $field := resources.Get "js/webgl-field.js" | minify | fingerprint "sha512" }}
 <canvas id="ic-webgl-field" aria-hidden="true" data-fallback="{{ $field.RelPermalink }}"
   style="position:fixed;inset:0;z-index:-9;pointer-events:none;background:#000;"></canvas>
@@ -10,7 +13,7 @@
      stays clear at the edges so the 3D still reads. Sits above canvas, below content. */}}
 <div aria-hidden="true" style="position:fixed;inset:0;z-index:-8;pointer-events:none;
   background:radial-gradient(ellipse 70% 80% at 50% 42%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 55%, rgba(0,0,0,0) 100%);"></div>
-{{ if site.Params.webgl_3d }}
+{{ if $use3d }}
   {{/* Three.js from cdnjs — already permitted by the site CSP (script-src cdnjs). */}}
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
   {{ $three := resources.Get "js/webgl-3d.js" | minify | fingerprint "sha512" }}
