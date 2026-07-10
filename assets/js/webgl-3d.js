@@ -35,57 +35,81 @@
     var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
     camera.position.set(0, 0, 6.2);
 
-    // ---- morphing wireframe object (the hero geometry) ----------------------
-    var uniforms = {
-      uTime: { value: 0 },
-      uEnergy: { value: 0 },                     // cursor-driven wobble amplitude
-      uColor: { value: new THREE.Color(0xff0033) },
-    };
+    // ---- community constellation (the hero geometry) -------------------------
+    // Youth + non-profit: a network of people. ~110 soft-white nodes on a loose
+    // sphere, thin lines linking near neighbours (community), a handful of red
+    // nodes (the movement's spark). Gentle, airy — no big colour mass.
+    var NODES = 110, RADIUS = 2.3, LINK_DIST = 1.15;
+    var nodeBase = new Float32Array(NODES * 3);
+    var nodePhase = new Float32Array(NODES);
+    for (var n = 0; n < NODES; n++) {
+      var th0 = Math.random() * Math.PI * 2;
+      var ph0 = Math.acos(2 * Math.random() - 1);
+      var rr = RADIUS * (0.75 + Math.random() * 0.45); // fuzzy shell
+      nodeBase[n * 3] = rr * Math.sin(ph0) * Math.cos(th0);
+      nodeBase[n * 3 + 1] = rr * Math.sin(ph0) * Math.sin(th0);
+      nodeBase[n * 3 + 2] = rr * Math.cos(ph0);
+      nodePhase[n] = Math.random() * Math.PI * 2;
+    }
 
-    // Smooth displaced orb with a fresnel rim: dark glassy body, glowing red
-    // edge — elegant, not a busy wireframe.
-    var vert = [
-      "uniform float uTime; uniform float uEnergy;",
-      "varying vec3 vNormal; varying vec3 vView; varying float vDisp;",
-      "void main(){",
-      "  vec3 p = position;",
-      "  float t = uTime * 0.45;",
-      "  float n = sin(p.x*1.7 + t) * sin(p.y*1.5 + t*1.2) * sin(p.z*1.9 + t*0.7);",
-      "  n += 0.35 * sin(p.y*3.0 - t*1.4);",
-      "  float amp = 0.16 + uEnergy * 0.28;",
-      "  vDisp = n * 0.5 + 0.5;",
-      "  vec3 d = p + normal * n * amp;",
-      "  vec4 mv = modelViewMatrix * vec4(d, 1.0);",
-      "  vNormal = normalize(normalMatrix * normal);",
-      "  vView = normalize(-mv.xyz);",
-      "  gl_Position = projectionMatrix * mv;",
-      "}"
-    ].join("\n");
-
-    var frag = [
-      "precision highp float;",
-      "uniform vec3 uColor; varying vec3 vNormal; varying vec3 vView; varying float vDisp;",
-      "void main(){",
-      "  float fres = pow(1.0 - max(dot(normalize(vNormal), normalize(vView)), 0.0), 2.4);",
-      "  vec3 body = vec3(0.03, 0.0, 0.015);",
-      "  vec3 c = body + uColor * fres * 1.7;",
-      "  c += uColor * smoothstep(0.62, 1.0, vDisp) * 0.12;",   // faint inner veins
-      "  gl_FragColor = vec4(c, 0.94);",
-      "}"
-    ].join("\n");
-
-    var geo = new THREE.IcosahedronGeometry(2.4, 5);
-    var mat = new THREE.ShaderMaterial({
-      uniforms: uniforms, vertexShader: vert, fragmentShader: frag,
-      transparent: true, depthWrite: true,
-    });
-    var blob = new THREE.Mesh(geo, mat);
+    var blob = new THREE.Group(); // keeps the name the animation loop uses
     scene.add(blob);
 
-    // clean low-poly geometric halo (20 faces) — a crisp wire outline, not noise
-    var shellMat = new THREE.MeshBasicMaterial({ color: 0xff0033, wireframe: true, transparent: true, opacity: 0.14, depthWrite: false });
-    var shell = new THREE.Mesh(new THREE.IcosahedronGeometry(3.5, 1), shellMat);
-    scene.add(shell);
+    // white community nodes
+    var nGeo = new THREE.BufferGeometry();
+    var nodePos = new Float32Array(nodeBase); // live copy, floats each frame
+    nGeo.setAttribute("position", new THREE.BufferAttribute(nodePos, 3));
+    var nMat = new THREE.PointsMaterial({ size: 0.07, color: 0xf5f5f4, transparent: true, opacity: 0.9, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    blob.add(new THREE.Points(nGeo, nMat));
+
+    // sparse red spark nodes (brand accent, small — not a mass)
+    var sparkIdx = [];
+    for (var s = 0; s < 14; s++) sparkIdx.push(Math.floor(Math.random() * NODES));
+    var sGeo = new THREE.BufferGeometry();
+    var sparkPos = new Float32Array(sparkIdx.length * 3);
+    sGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
+    var sMat = new THREE.PointsMaterial({ size: 0.11, color: 0xff0033, transparent: true, opacity: 0.85, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    blob.add(new THREE.Points(sGeo, sMat));
+
+    // connection lines between near neighbours
+    var pairs = [];
+    for (var a = 0; a < NODES; a++) {
+      for (var b = a + 1; b < NODES; b++) {
+        var dx = nodeBase[a * 3] - nodeBase[b * 3];
+        var dy = nodeBase[a * 3 + 1] - nodeBase[b * 3 + 1];
+        var dz = nodeBase[a * 3 + 2] - nodeBase[b * 3 + 2];
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) < LINK_DIST) pairs.push([a, b]);
+      }
+    }
+    var lGeo = new THREE.BufferGeometry();
+    var linePos = new Float32Array(pairs.length * 6);
+    lGeo.setAttribute("position", new THREE.BufferAttribute(linePos, 3));
+    var lMat = new THREE.LineBasicMaterial({ color: 0xbfc3cc, transparent: true, opacity: 0.16, depthWrite: false, blending: THREE.AdditiveBlending });
+    blob.add(new THREE.LineSegments(lGeo, lMat));
+
+    // per-frame: gentle float per node, lines + sparks follow
+    function updateNetwork(t, energy) {
+      for (var i2 = 0; i2 < NODES; i2++) {
+        var f = 0.06 + energy * 0.06;
+        nodePos[i2 * 3] = nodeBase[i2 * 3] + Math.sin(t * 0.7 + nodePhase[i2]) * f;
+        nodePos[i2 * 3 + 1] = nodeBase[i2 * 3 + 1] + Math.cos(t * 0.6 + nodePhase[i2] * 1.3) * f;
+        nodePos[i2 * 3 + 2] = nodeBase[i2 * 3 + 2] + Math.sin(t * 0.5 + nodePhase[i2] * 0.7) * f;
+      }
+      for (var p2 = 0; p2 < pairs.length; p2++) {
+        var A = pairs[p2][0], B = pairs[p2][1];
+        linePos[p2 * 6] = nodePos[A * 3]; linePos[p2 * 6 + 1] = nodePos[A * 3 + 1]; linePos[p2 * 6 + 2] = nodePos[A * 3 + 2];
+        linePos[p2 * 6 + 3] = nodePos[B * 3]; linePos[p2 * 6 + 4] = nodePos[B * 3 + 1]; linePos[p2 * 6 + 5] = nodePos[B * 3 + 2];
+      }
+      for (var s2 = 0; s2 < sparkIdx.length; s2++) {
+        var S = sparkIdx[s2];
+        sparkPos[s2 * 3] = nodePos[S * 3]; sparkPos[s2 * 3 + 1] = nodePos[S * 3 + 1]; sparkPos[s2 * 3 + 2] = nodePos[S * 3 + 2];
+      }
+      nGeo.attributes.position.needsUpdate = true;
+      lGeo.attributes.position.needsUpdate = true;
+      sGeo.attributes.position.needsUpdate = true;
+      lMat.opacity = 0.14 + energy * 0.22; // cursor energy lights the connections
+    }
+    updateNetwork(0, 0);
 
     // ---- parallax particle depth-field --------------------------------------
     var COUNT = 2200;
@@ -109,7 +133,7 @@
     scene.add(points);
 
     // a second, sparse red point layer near the object for accent depth
-    var rCount = 400;
+    var rCount = 120;
     var rPos = new Float32Array(rCount * 3);
     for (var j = 0; j < rCount; j++) {
       rPos[j * 3] = (Math.random() - 0.5) * 8;
@@ -118,7 +142,7 @@
     }
     var rGeo = new THREE.BufferGeometry();
     rGeo.setAttribute("position", new THREE.BufferAttribute(rPos, 3));
-    var rMat = new THREE.PointsMaterial({ size: 0.06, color: 0xff0033, transparent: true, opacity: 0.5, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    var rMat = new THREE.PointsMaterial({ size: 0.05, color: 0xff0033, transparent: true, opacity: 0.3, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
     var redPoints = new THREE.Points(rGeo, rMat);
     scene.add(redPoints);
 
@@ -151,12 +175,9 @@
       mouse.sy = damp(mouse.sy, mouse.y, 5, dt);
 
       if (!reduce) {
-        uniforms.uTime.value = t;
-        uniforms.uEnergy.value = energy;
-        blob.rotation.y = t * 0.12 + scroll * Math.PI * 3.0;   // scroll spins it ~1.5 turns
-        blob.rotation.x = t * 0.08 + mouse.sy * 0.3 + scroll * 1.2;
-        shell.rotation.y = -t * 0.09 - scroll * 1.6;
-        shell.rotation.x = t * 0.05;
+        updateNetwork(t, energy);
+        blob.rotation.y = t * 0.1 + scroll * Math.PI * 2.0;    // scroll turns the constellation
+        blob.rotation.x = t * 0.05 + mouse.sy * 0.2 + scroll * 0.8;
         points.rotation.y = t * 0.015 + scroll * 0.6;
         redPoints.rotation.y = -t * 0.03 - scroll * 0.8;
         redPoints.rotation.x = t * 0.02;
@@ -170,7 +191,6 @@
       blob.position.x = damp(blob.position.x, Math.cos(weave) * 3.1, 3, dt);
       blob.position.y = damp(blob.position.y, Math.sin(weave) * 1.1, 3, dt);
       blob.position.z = damp(blob.position.z, -Math.abs(Math.sin(weave)) * 1.2, 3, dt);
-      shell.position.copy(blob.position);
       camera.position.x = damp(camera.position.x, mouse.sx * 0.7, 3, dt);
       camera.position.y = damp(camera.position.y, -mouse.sy * 0.5, 3, dt);
       camera.position.z = 6.4;
