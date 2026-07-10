@@ -1,7 +1,20 @@
-{{/* Interactive WebGL flow-field background. Opt in per site with
-     `particle_grid = true` in [params]. Sits above the starfield (z -9 vs -10),
-     below all content. Real GPU fragment shader — no dependencies (~4 KB). */}}
-<canvas id="ic-webgl-field" aria-hidden="true"
-  style="position:fixed;inset:0;z-index:-9;pointer-events:none;background:#000;"></canvas>
+{{/* Interactive WebGL background, opt in per site with `particle_grid = true`.
+     If `webgl_3d = true`, load the Three.js 3D scene (morphing wireframe object +
+     parallax particle depth); it auto-falls back to the dependency-free raw-WebGL
+     flow-field (data-fallback) if Three is blocked or init fails.
+     Sits above the starfield (z -9 vs -10), below all content. */}}
 {{ $field := resources.Get "js/webgl-field.js" | minify | fingerprint "sha512" }}
-<script defer src="{{ $field.RelPermalink }}" integrity="{{ $field.Data.Integrity }}" crossorigin="anonymous"></script>
+<canvas id="ic-webgl-field" aria-hidden="true" data-fallback="{{ $field.RelPermalink }}"
+  style="position:fixed;inset:0;z-index:-9;pointer-events:none;background:#000;"></canvas>
+{{/* Readability scrim: darkens the field where the content column sits (centre),
+     stays clear at the edges so the 3D still reads. Sits above canvas, below content. */}}
+<div aria-hidden="true" style="position:fixed;inset:0;z-index:-8;pointer-events:none;
+  background:radial-gradient(ellipse 70% 80% at 50% 42%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 55%, rgba(0,0,0,0) 100%);"></div>
+{{ if site.Params.webgl_3d }}
+  {{/* Three.js from cdnjs — already permitted by the site CSP (script-src cdnjs). */}}
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+  {{ $three := resources.Get "js/webgl-3d.js" | minify | fingerprint "sha512" }}
+  <script defer src="{{ $three.RelPermalink }}" integrity="{{ $three.Data.Integrity }}" crossorigin="anonymous"></script>
+{{ else }}
+  <script defer src="{{ $field.RelPermalink }}" integrity="{{ $field.Data.Integrity }}" crossorigin="anonymous"></script>
+{{ end }}
