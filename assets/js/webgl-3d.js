@@ -151,21 +151,24 @@
       if (!reduce) {
         uniforms.uTime.value = t;
         uniforms.uEnergy.value = energy;
-        blob.rotation.y = t * 0.18 + scroll * 2.2;
-        blob.rotation.x = t * 0.1 + mouse.sy * 0.3;
+        blob.rotation.y = t * 0.12 + scroll * Math.PI * 3.0;   // scroll spins it ~1.5 turns
+        blob.rotation.x = t * 0.08 + mouse.sy * 0.3 + scroll * 1.2;
         core.rotation.copy(blob.rotation);
-        shell.rotation.y = -t * 0.09;
+        shell.rotation.y = -t * 0.09 - scroll * 1.6;
         shell.rotation.x = t * 0.05;
-        points.rotation.y = t * 0.015;
-        redPoints.rotation.y = -t * 0.03;
+        points.rotation.y = t * 0.015 + scroll * 0.6;
+        redPoints.rotation.y = -t * 0.03 - scroll * 0.8;
         redPoints.rotation.x = t * 0.02;
       }
 
-      // camera parallax + subtle scroll dolly
+      // The whole scene travels WITH the scroll: object drifts up + camera pans
+      // down through the depth-field, so scrolling visibly moves the 3D.
+      blob.position.y = damp(blob.position.y, scroll * 4.5, 3, dt);
+      core.position.y = blob.position.y;
       camera.position.x = damp(camera.position.x, mouse.sx * 1.1, 3, dt);
-      camera.position.y = damp(camera.position.y, -mouse.sy * 0.8 + scroll * 0.6, 3, dt);
-      camera.position.z = 6.2 + scroll * 1.4;
-      camera.lookAt(blob.position.x * 0.4, 0, 0);
+      camera.position.y = damp(camera.position.y, -mouse.sy * 0.8 + scroll * 6.0, 3, dt);
+      camera.position.z = 6.4;
+      camera.lookAt(0, scroll * 5.2, 0);
 
       renderer.render(scene, camera);
       if (!reduce) requestAnimationFrame(frame);
@@ -180,7 +183,8 @@
     }, { passive: true });
 
     window.addEventListener("scroll", function () {
-      scrollTarget = Math.min(window.scrollY / (window.innerHeight * 2.2), 1);
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      scrollTarget = max > 0 ? Math.min(window.scrollY / max, 1) : 0; // 0..1 over whole page
     }, { passive: true });
 
     document.addEventListener("visibilitychange", function () {

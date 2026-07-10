@@ -197,13 +197,13 @@ p, li { color: var(--color-text-light); }
 .ic-hero-headline {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(3rem, 8.5vw, 7.5rem);
-  letter-spacing: -0.025em;
-  line-height: 0.98;
-  text-transform: none;
+  font-size: clamp(3.2rem, 10vw, 9rem);
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  text-transform: uppercase;                 // youth/brutalist — full caps
   color: var(--color-text-light);
   margin: 0 auto 28px;
-  max-width: 15ch;
+  max-width: 14ch;
 }
 
 .ic-hero-sub {

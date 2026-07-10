@@ -6,12 +6,18 @@
      fails to load, nothing stays hidden more than ~1.6s after load. */}}
 <script>
 document.documentElement.className += ' js';
-addEventListener('load', function () {
-  setTimeout(function () {
-    var n = document.querySelectorAll('.reveal-up:not(.in)');
-    for (var i = 0; i < n.length; i++) n[i].classList.add('in');
-  }, 1600);
-});
+// Reveal anything in the viewport as soon as the DOM is ready — the hero/identity
+// text never waits on ic-motion.js, so it can't be perceived as "not showing".
+function icReveal(all){
+  var n = document.querySelectorAll('.reveal-up:not(.in)');
+  for (var i = 0; i < n.length; i++){
+    if (all) { n[i].classList.add('in'); continue; }
+    var r = n[i].getBoundingClientRect();
+    if (r.top < (window.innerHeight || 800)) n[i].classList.add('in');
+  }
+}
+document.addEventListener('DOMContentLoaded', function(){ icReveal(false); });
+addEventListener('load', function(){ setTimeout(function(){ icReveal(true); }, 500); });
 </script>
 
 
