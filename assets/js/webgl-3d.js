@@ -42,51 +42,53 @@
       uColor: { value: new THREE.Color(0xff0033) },
     };
 
+    // Smooth displaced orb with a fresnel rim: dark glassy body, glowing red
+    // edge — elegant, not a busy wireframe.
     var vert = [
       "uniform float uTime; uniform float uEnergy;",
-      "varying float vDisp;",
+      "varying vec3 vNormal; varying vec3 vView; varying float vDisp;",
       "void main(){",
       "  vec3 p = position;",
-      "  float t = uTime * 0.6;",
-      "  float n = sin(p.x*2.4 + t) * sin(p.y*2.1 + t*1.3) * sin(p.z*2.7 + t*0.7);",
-      "  n += 0.5 * sin(p.y*4.0 - t*1.6);",
-      "  float amp = 0.22 + uEnergy * 0.35;",
+      "  float t = uTime * 0.45;",
+      "  float n = sin(p.x*1.7 + t) * sin(p.y*1.5 + t*1.2) * sin(p.z*1.9 + t*0.7);",
+      "  n += 0.35 * sin(p.y*3.0 - t*1.4);",
+      "  float amp = 0.16 + uEnergy * 0.28;",
       "  vDisp = n * 0.5 + 0.5;",
       "  vec3 d = p + normal * n * amp;",
-      "  gl_Position = projectionMatrix * modelViewMatrix * vec4(d, 1.0);",
+      "  vec4 mv = modelViewMatrix * vec4(d, 1.0);",
+      "  vNormal = normalize(normalMatrix * normal);",
+      "  vView = normalize(-mv.xyz);",
+      "  gl_Position = projectionMatrix * mv;",
       "}"
     ].join("\n");
 
     var frag = [
-      "precision mediump float;",
-      "uniform vec3 uColor; varying float vDisp;",
+      "precision highp float;",
+      "uniform vec3 uColor; varying vec3 vNormal; varying vec3 vView; varying float vDisp;",
       "void main(){",
-      "  vec3 dark = vec3(0.18, 0.0, 0.05);",
-      "  vec3 c = mix(dark, uColor, smoothstep(0.25, 0.95, vDisp));",
-      "  gl_FragColor = vec4(c, 0.82);",
+      "  float fres = pow(1.0 - max(dot(normalize(vNormal), normalize(vView)), 0.0), 2.4);",
+      "  vec3 body = vec3(0.03, 0.0, 0.015);",
+      "  vec3 c = body + uColor * fres * 1.7;",
+      "  c += uColor * smoothstep(0.62, 1.0, vDisp) * 0.12;",   // faint inner veins
+      "  gl_FragColor = vec4(c, 0.94);",
       "}"
     ].join("\n");
 
-    var geo = new THREE.IcosahedronGeometry(2.75, 7);
+    var geo = new THREE.IcosahedronGeometry(2.4, 5);
     var mat = new THREE.ShaderMaterial({
       uniforms: uniforms, vertexShader: vert, fragmentShader: frag,
-      wireframe: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      transparent: true, depthWrite: true,
     });
     var blob = new THREE.Mesh(geo, mat);
     scene.add(blob);
 
-    // second, larger slow-counter-rotating wireframe shell for parallax depth
-    var shellMat = new THREE.MeshBasicMaterial({ color: 0x3a0010, wireframe: true, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending });
-    var shell = new THREE.Mesh(new THREE.IcosahedronGeometry(3.9, 2), shellMat);
+    // clean low-poly geometric halo (20 faces) — a crisp wire outline, not noise
+    var shellMat = new THREE.MeshBasicMaterial({ color: 0xff0033, wireframe: true, transparent: true, opacity: 0.14, depthWrite: false });
+    var shell = new THREE.Mesh(new THREE.IcosahedronGeometry(3.5, 1), shellMat);
     scene.add(shell);
 
-    // faint solid inner core for volume
-    var coreMat = new THREE.MeshBasicMaterial({ color: 0x180009, transparent: true, opacity: 0.7, depthWrite: false });
-    var core = new THREE.Mesh(new THREE.IcosahedronGeometry(2.45, 3), coreMat);
-    scene.add(core);
-
     // ---- parallax particle depth-field --------------------------------------
-    var COUNT = 3400;
+    var COUNT = 2200;
     var pos = new Float32Array(COUNT * 3);
     for (var i = 0; i < COUNT; i++) {
       // spherical shell around the scene for depth on all sides
@@ -100,7 +102,7 @@
     var pGeo = new THREE.BufferGeometry();
     pGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     var pMat = new THREE.PointsMaterial({
-      size: 0.045, color: 0x8a8a90, transparent: true, opacity: 0.85,
+      size: 0.04, color: 0x8a8a90, transparent: true, opacity: 0.55,
       sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending,
     });
     var points = new THREE.Points(pGeo, pMat);
@@ -153,7 +155,6 @@
         uniforms.uEnergy.value = energy;
         blob.rotation.y = t * 0.12 + scroll * Math.PI * 3.0;   // scroll spins it ~1.5 turns
         blob.rotation.x = t * 0.08 + mouse.sy * 0.3 + scroll * 1.2;
-        core.rotation.copy(blob.rotation);
         shell.rotation.y = -t * 0.09 - scroll * 1.6;
         shell.rotation.x = t * 0.05;
         points.rotation.y = t * 0.015 + scroll * 0.6;
@@ -164,7 +165,7 @@
       // The whole scene travels WITH the scroll: object drifts up + camera pans
       // down through the depth-field, so scrolling visibly moves the 3D.
       blob.position.y = damp(blob.position.y, scroll * 4.5, 3, dt);
-      core.position.y = blob.position.y;
+      shell.position.y = blob.position.y;
       camera.position.x = damp(camera.position.x, mouse.sx * 1.1, 3, dt);
       camera.position.y = damp(camera.position.y, -mouse.sy * 0.8 + scroll * 6.0, 3, dt);
       camera.position.z = 6.4;

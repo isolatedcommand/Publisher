@@ -61,9 +61,9 @@
       <div class="col-md-12">
         <div class="block section-title text-center">
 
-          {{ with .title }}<h1>{{ . | markdownify }}</h1>{{ end }} <hr>
-          {{ with .anntitle1 }}<h2>{{ . | markdownify }}</h2>{{ end }}
-          {{ with .anndesc1 }}<h3>{{ . | markdownify }}</h3>{{ end }}
+          {{ with .title }}<p class="ic-intel" style="justify-content:center;">{{ . | markdownify }}</p>{{ end }}
+          {{ with .anntitle1 }}<h2 class="reveal-up">{{ . | markdownify }}</h2>{{ end }}
+          {{ with .anndesc1 }}<div class="ann-desc reveal-up d-1">{{ . | markdownify }}</div>{{ end }}
         
         </div>
       </div>
