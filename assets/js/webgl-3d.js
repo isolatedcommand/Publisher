@@ -27,7 +27,7 @@
 
   try {
     var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-    renderer.setClearColor(0x000000, 1);
+    renderer.setClearColor(0x0b0e14, 1);
 
     var scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x000000, 0.11);
@@ -68,7 +68,7 @@
     var sGeo = new THREE.BufferGeometry();
     var sparkPos = new Float32Array(sparkIdx.length * 3);
     sGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
-    var sMat = new THREE.PointsMaterial({ size: 0.11, color: 0xff0033, transparent: true, opacity: 0.85, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    var sMat = new THREE.PointsMaterial({ size: 0.11, color: 0x7be43c, transparent: true, opacity: 0.85, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
     blob.add(new THREE.Points(sGeo, sMat));
 
     // connection lines between near neighbours
@@ -142,7 +142,7 @@
     }
     var rGeo = new THREE.BufferGeometry();
     rGeo.setAttribute("position", new THREE.BufferAttribute(rPos, 3));
-    var rMat = new THREE.PointsMaterial({ size: 0.05, color: 0xff0033, transparent: true, opacity: 0.3, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    var rMat = new THREE.PointsMaterial({ size: 0.05, color: 0x7be43c, transparent: true, opacity: 0.3, sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending });
     var redPoints = new THREE.Points(rGeo, rMat);
     scene.add(redPoints);
 

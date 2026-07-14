@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="280" viewBox="0 0 920 280">
+  
+  
+  
+  <g>
+    <rect class="keyShadow" fill="#0B0E14" x="70" y="86" width="316" height="104" rx="22" opacity="0.85" transform="translate(0,10)"></rect>
+    <rect class="keyFill keyStroke" fill="#FFFFFF" stroke="#0B0E14" x="70" y="86" width="316" height="104" rx="22" stroke-opacity="0.85" stroke-width="6"></rect>
+    <text class="ink" fill="#0B0E14" x="228" y="158" font-family="Space Grotesk, Arial, sans-serif" font-size="56" font-weight="700" text-anchor="middle">isolated</text>
+  </g>
+  
+  <g opacity="0.5">
+    <rect class="plus" fill="#0B0E14" x="422" y="132" width="44" height="12" rx="4"></rect>
+    <rect class="plus" fill="#0B0E14" x="438" y="116" width="12" height="44" rx="4"></rect>
+  </g>
+  
+  <g>
+    <rect x="506" y="86" width="344" height="104" rx="22" fill="#4E9F2F" transform="translate(0,10)"></rect>
+    <rect x="506" y="86" width="344" height="104" rx="22" fill="#7BE43C"></rect>
+    <text x="678" y="158" font-family="Space Grotesk, Arial, sans-serif" font-size="56" font-weight="700" fill="#0B0E14" text-anchor="middle">command</text>
+  </g>
+</svg>

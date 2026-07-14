@@ -1,25 +1,49 @@
+{{/* Standard Publisher footer — identical structure on every child site.
+     Config-driven: site.Menus.footer, [params.social], params.description,
+     params.copyright (falls back to a sensible default). */}}
 <footer class="footer">
   <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="footer-menu">
+    <div class="footer-grid">
 
-
-          <ul>
-
-            {{ range site.Menus.footer }}
-            <li><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
-            {{ end }}
-          </ul><br>
-
-                      <ul class="social-icons">
-            {{ range .Site.Params.social }}
-            <li><a href="{{ .link | safeURL }}" aria-label="{{ .title | default `Social link` }}" title="{{ .title }}" target="_blank" rel="noopener"><i class="{{ .icon }}" style="color:red;" aria-hidden="true"></i></a></li>
-            {{ end }}</ul>
-        </div>
-
-        <p class="copyright">{{ site.Params.copyright | markdownify }}</p>
+      <div class="footer-brand">
+        <a href="{{ site.BaseURL | relLangURL }}" aria-label="{{ site.Title }}">
+          {{ partial "logo.html" . }}
+        </a>
+        {{ with site.Params.description }}<p class="footer-tagline">{{ . }}</p>{{ end }}
+        <span class="ic-activity">{{ site.Params.footer_status | default "systems operational" }}</span>
       </div>
+
+      {{ with site.Menus.footer }}
+      <nav class="footer-links" aria-label="Footer">
+        <p class="footer-heading">explore</p>
+        <ul>
+          {{ range . }}
+          <li><a href="{{ if findRE `^http` .URL }}{{ .URL }}{{ else }}{{ .URL | relLangURL }}{{ end }}"{{ if findRE `^http` .URL }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}</a></li>
+          {{ end }}
+        </ul>
+      </nav>
+      {{ end }}
+
+      {{ with site.Params.social }}
+      <div class="footer-social">
+        <p class="footer-heading">connect</p>
+        <ul class="social-icons">
+          {{ range . }}
+          <li><a href="{{ .link | safeURL }}" aria-label="{{ .title | default `Social link` }}" title="{{ .title }}" target="_blank" rel="noopener"><i class="{{ .icon }}" aria-hidden="true"></i></a></li>
+          {{ end }}
+        </ul>
+      </div>
+      {{ end }}
+
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">
+        {{ if site.Params.copyright }}{{ site.Params.copyright | markdownify }}{{ else }}
+        &copy; {{ now.Year }} {{ site.Title }} &mdash; built with <a href="https://publisher.devcomm.isolatedcommand.com" target="_blank" rel="noopener">Publisher</a> by <a href="https://devcomm.isolatedcommand.com" target="_blank" rel="noopener">Isolated Command Developer Community</a>
+        {{ end }}
+      </p>
+      <span class="footer-keys" aria-hidden="true"><i></i><i></i><i></i></span>
     </div>
   </div>
 </footer>

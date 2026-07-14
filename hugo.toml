@@ -13,11 +13,22 @@
     mediaType = "application/manifest+json"
     rel = "manifest"
 
+####################### theme default brand identity ######################
+# Keycap identity shipped by the theme: banner logo (white "isolated" key +
+# lime "command" key) and the square i/c mark. Child sites inherit these by
+# default and may override with their own assets/params.
+[params]
+logo = "images/logo.svg"              # banner logo, dark-header variant
+logo_darkmode = "images/logo-dark.svg" # banner logo for light surfaces
+logo_square = "images/logo-square.svg" # square i/c mark (social, manifest)
+logo_width = "220px"
+favicon = "images/favicon.png"        # rasterised square mark
+
 ####################### theme default site variables ######################
 # Default colors/fonts so the SCSS compiles out of the box. Child sites may
 # override any of these in their own [params.variables].
 [params.variables]
-color_primary = "#3272c8"
+color_primary = "#7BE43C"
 body_color = "#fff"
 text_color = "white"
 text_red = "red"
@@ -30,10 +41,10 @@ white = "#fff"
 light = "white"
 font_size = "15px"
 font_scale = "1.25"
-font_primary = "Roboto+Slab:wght@300;400"
-font_primary_type = "monospace"
-font_secondary = "Roboto+Slab:wght@300;400"
-font_secondary_type = "monospace"
+font_primary = "Inter:wght@400;500;600"
+font_primary_type = "sans-serif"
+font_secondary = "Space+Grotesk:wght@500;600;700"
+font_secondary_type = "sans-serif"
 font_icon = "Font Awesome 5 Free"
 
 ############################# theme default plugins ##########################

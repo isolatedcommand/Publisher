@@ -1,24 +1,40 @@
 // ============================================================================
-// Isolated Command — Cyber-Streetwear × Elite Engineering layer
-// (Lusion / Unseen / Valorant-HUD benchmark. Loaded last: wins the cascade.)
-// Rules: true-black stage · 1px hairlines · Bloodline Red (#FF0033) reserved
-// for interactive feedback, typographic highlights and node illumination ·
-// brutalist Anton display type · JetBrains Mono labels · Inter long-form prose.
+// Isolated Command — KEYCAP identity layer
+// (Loaded last: wins the cascade.)
+// The logo is the design system: two keycaps — white "isolated" + lime
+// "command" — on an ink stage. Every interactive surface is a keycap:
+// rounded corners, hard offset shadow (pressed-key depth, never blur),
+// and a press-down on hover. Monospace `> verb` prompts tag content in
+// lime / violet / cyan. Space Grotesk display, Inter prose, JetBrains Mono.
 // ============================================================================
 
-// ---- selection: interaction, therefore bloodline ------------------------------
-::selection { background: var(--color-accent); color: #fff; }
+// SCSS-side constants (mirror the :root tokens for rgba() math)
+$key-lime: #7BE43C;
+$key-lime-press: #4E9F2F;
+$key-violet: #A78BFA;
+$key-violet-press: #7C5CD6;
+$key-cyan: #38BDF8;
+$key-cyan-press: #2492C7;
+$key-yellow: #FFE14D;
+$key-yellow-press: #D9AF1B;
+$key-orange: #FF9E57;
+$key-orange-press: #D96D24;
+$key-pink: #F97BC8;
+$key-pink-press: #C74A97;
+$key-ink: #0B0E14;
 
-// ---- display typography — Syne, heavy & characterful -------------------------
+// ---- selection: press the key ------------------------------------------------
+::selection { background: var(--color-accent); color: var(--color-ink); }
+
+// ---- display typography — Space Grotesk, the logo's voice --------------------
 h1, h2 {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.02em;        // Syne isn't condensed — ease off the brutal tracking
+  font-weight: 700;
+  letter-spacing: var(--tracking-display);
   text-transform: none;
 }
 
-// ---- legibility over the live 3D field ----------------------------------------
-// Soft dark halo keeps headings + body crisp where the field is bright.
+// ---- legibility over dark hero backgrounds ------------------------------------
 h1, h2, h3, h4, .ic-hero-headline, .ic-hero-sub, .ic-hero-eyebrow,
 .post-content p, .post-content li, .page-wrapper p, .page-wrapper li {
   text-shadow: 0 1px 24px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.7);
@@ -38,9 +54,11 @@ p, li { color: var(--color-text-light); }
   p { margin-bottom: 1rem; color: var(--color-text-light); }
 }
 
-// ---- frosted-glass navigation (mono, tactical) --------------------------------
+// ---- frosted-glass navigation (ink, keycap CTA) -------------------------------
+// Top-level links wear the keycap accents — lime, violet, cyan — cycling in
+// order, so the nav reads like a row of colored keys.
 .navigation {
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(11, 14, 20, 0.72);
   backdrop-filter: blur(16px) saturate(1.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   border-bottom: 1px solid var(--border-subtle);
@@ -48,90 +66,621 @@ p, li { color: var(--color-text-light); }
   padding: 14px 0;
 
   .navbar-nav li a {
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-family: var(--font-display);
+    font-size: 15px;
     font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    transition: color 0.18s ease;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: color 0.18s ease, opacity 0.18s ease;
+    opacity: 0.9;
 
     &:hover, &:focus {
-      color: var(--color-accent);
+      opacity: 1;
       background: transparent;
     }
   }
+
+  // accent cycle: lime → violet → cyan → lime …
+  .navbar-nav > li:nth-of-type(3n+1) > a { color: $key-lime; }
+  .navbar-nav > li:nth-of-type(3n+2) > a { color: $key-violet; }
+  .navbar-nav > li:nth-of-type(3n)   > a { color: $key-cyan; }
+
+  // hover/current: full-strength accent + keycap underline
+  .navbar-nav > li > a:hover,
+  .navbar-nav > li > a:focus,
+  .navbar-nav > li > a.current,
+  .navbar-nav > li > a.current-parent { filter: brightness(1.15); }
+
+  // dropdown children stay quiet until hovered
+  .navbar-nav .dropdown-menu a { color: var(--color-text-muted); }
 }
 
-// ---- button system: streetwear-square, mono, acid feedback --------------------
-.btn-main,
-.btn-default,
-.btn-view-works {
-  background: var(--color-text-light);
-  color: #000;
-  border: 1px solid var(--color-text-light);
-  border-radius: 0;
-  padding: 15px 32px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: var(--tracking-intel);
-  text-transform: uppercase;
-  box-shadow: none;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+// ============================================================================
+// THE KEYCAP — core mixin. Hard offset shadow = the key's side. Hover
+// presses the key down: cap travels, side shrinks, total height constant.
+// ============================================================================
+@mixin keycap($cap, $side, $ink: $key-ink, $travel: 5px) {
+  display: inline-block;
+  background: $cap;
+  color: $ink;
+  border: 0;
+  border-radius: var(--key-radius);
+  box-shadow: 0 #{$travel} 0 $side;
+  transform: translateY(0);
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+              background 0.18s ease, color 0.18s ease;
 
   &:hover, &:focus {
-    background: #000;
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-    box-shadow: 0 0 32px -8px var(--glow-accent);
-    transform: translateY(-1px);
+    background: lighten($cap, 4%);
+    color: $ink;
+    transform: translateY(2px);
+    box-shadow: 0 #{$travel - 2px} 0 $side;
+  }
+
+  &:active {
+    transform: translateY(#{$travel});
+    box-shadow: 0 0 0 $side;
   }
 }
 
+// ---- button system: every button is a keycap -----------------------------------
+.btn-main,
+.btn-default,
+.btn-view-works {
+  @include keycap($key-lime, $key-lime-press);
+  padding: 15px 32px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+// Ghost keycap — dark cap, hairline stroke, gray side (the "isolated" key)
 .btn-ghost,
 .btn-solid-border {
   display: inline-block;
+  background: var(--color-bg-dark);
+  color: var(--color-text-light);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--key-radius);
+  padding: 13px 30px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: 0 5px 0 rgba(255, 255, 255, 0.28);
+  transform: translateY(0);
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+              border-color 0.18s ease, color 0.18s ease;
+
+  &:hover, &:focus {
+    background: var(--color-bg-dark);
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: translateY(2px);
+    box-shadow: 0 3px 0 var(--color-accent-press);
+  }
+
+  &:active {
+    transform: translateY(5px);
+    box-shadow: 0 0 0 var(--color-accent-press);
+  }
+}
+
+.btn-small { padding: 10px 20px; font-size: 13px; }
+
+// Navbar CTA ("Join Us") — the lime command key, always
+.navbar-cta {
+  @include keycap($key-lime, $key-lime-press, $key-ink, 4px);
+  padding: 9px 22px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.navbar-cta--outline {
   background: transparent;
   color: var(--color-text-light);
-  border: 1px solid var(--border-strong);
-  border-radius: 0;
-  padding: 15px 32px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: var(--tracking-intel);
-  text-transform: uppercase;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 0 rgba(255, 255, 255, 0.28);
 
   &:hover, &:focus {
     background: transparent;
     color: var(--color-accent);
     border-color: var(--color-accent);
+    box-shadow: 0 2px 0 var(--color-accent-press);
   }
 }
 
-.btn-small { padding: 10px 20px; font-size: 11px; }
+// ---- keycap chips: sticker verbs (hack / build / learn / ship / lead …) ---------
+// Like a student's laptop covered in tech stickers: each key sits a little
+// crooked, floats a little, and wiggles straight when touched.
+// <span class="ic-key ic-key--violet ic-key--tilt-r">hack</span>
+.ic-key {
+  display: inline-block;
+  padding: 10px 26px;
+  border-radius: var(--key-radius);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-ink);
+  background: #E7E9EE;
+  box-shadow: 0 6px 0 darken(#E7E9EE, 32%);
+  user-select: none;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &--lime   { background: $key-lime;   box-shadow: 0 6px 0 $key-lime-press; }
+  &--violet { background: $key-violet; box-shadow: 0 6px 0 $key-violet-press; }
+  &--cyan   { background: $key-cyan;   box-shadow: 0 6px 0 $key-cyan-press; }
+  &--yellow { background: $key-yellow; box-shadow: 0 6px 0 $key-yellow-press; }
+  &--orange { background: $key-orange; box-shadow: 0 6px 0 $key-orange-press; }
+  &--pink   { background: $key-pink;   box-shadow: 0 6px 0 $key-pink-press; }
+  &--ghost  {
+    background: var(--color-bg-accent);
+    color: var(--color-text-light);
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 6px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  &--tilt-l { transform: rotate(-7deg); }
+  &--tilt-r { transform: rotate(6deg); }
+
+  // sticker imperfection: keys in a row each land slightly differently
+  &:nth-of-type(4n+1) { transform: rotate(-3deg); }
+  &:nth-of-type(4n+2) { transform: rotate(2.5deg) translateY(2px); }
+  &:nth-of-type(4n+3) { transform: rotate(-1.5deg) translateY(-2px); }
+  &:nth-of-type(4n)   { transform: rotate(4deg); }
+  &.ic-key--tilt-l { transform: rotate(-7deg); }   // explicit tilts still win
+  &.ic-key--tilt-r { transform: rotate(6deg); }
+
+  // straighten + pop on touch (double class outranks the nth-of-type jitter)
+  &.ic-key:hover { transform: rotate(0deg) scale(1.06); }
+
+  // gentle idle float for hero decoration
+  &--float   { animation: ic-key-float 5.5s ease-in-out infinite; }
+  &--float-2 { animation: ic-key-float 6.5s ease-in-out infinite 0.8s; }
+  &--float-3 { animation: ic-key-float 7.5s ease-in-out infinite 1.6s; }
+}
+@keyframes ic-key-float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -10px; }
+}
+
+// ---- hero floating opportunity keys ----------------------------------------------
+// Rendered from banner front matter `keys:` (label / accent / caption / tilt).
+// Desktop: a loose column drifting down the hero's right edge. Mobile: an
+// inline sticker row under the CTAs.
+.ic-hero-keys {
+  position: absolute;
+  right: clamp(16px, 6vw, 110px);
+  top: 50%;
+  transform: translateY(-52%);
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  z-index: 2;
+  pointer-events: none;
+
+  .ic-key { pointer-events: auto; }
+
+  .ic-key-note {
+    text-align: center;
+
+    &:nth-child(odd)  { transform: translateX(-26px); }
+    &:nth-child(even) { transform: translateX(30px); }
+
+    .ic-key-caption {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-text-muted);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  @media (max-width: 1199px) {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-top: 44px;
+
+    .ic-key-note:nth-child(odd),
+    .ic-key-note:nth-child(even) { transform: none; }
+  }
+}
+
+// ---- community: people make the keys mean something -------------------------------
+// Avatar stack:  <div class="ic-avatars"><span class="ic-avatar">C</span>…</div>
+// Initial-based keycap circles — no photos needed, works from config alone.
+.ic-avatars {
+  display: inline-flex;
+  align-items: center;
+
+  .ic-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;               // squircle — a tiny keycap, not a bubble
+    border: 2px solid var(--color-ink);
+    background: $key-yellow;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: -8px;
+    box-shadow: 0 2px 0 var(--color-ink);
+
+    &:first-child { margin-left: 0; }
+    &:nth-child(5n+2) { background: $key-pink; }
+    &:nth-child(5n+3) { background: $key-cyan; }
+    &:nth-child(5n+4) { background: $key-lime; }
+    &:nth-child(5n)   { background: $key-orange; }
+  }
+
+  .ic-avatar-more {
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+}
+
+// Badge: tiny achievement keycap —  <span class="ic-badge">🏆 CTF Top 10</span>
+.ic-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 9px;
+  background: rgba(255, 225, 77, 0.14);
+  border: 1px solid rgba(255, 225, 77, 0.45);
+  color: $key-yellow;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+
+  &--violet { background: rgba(167, 139, 250, 0.14); border-color: rgba(167, 139, 250, 0.45); color: $key-violet; }
+  &--cyan   { background: rgba(56, 189, 248, 0.14);  border-color: rgba(56, 189, 248, 0.45);  color: $key-cyan; }
+  &--pink   { background: rgba(249, 123, 200, 0.14); border-color: rgba(249, 123, 200, 0.45); color: $key-pink; }
+  &--lime   { background: rgba(123, 228, 60, 0.14);  border-color: rgba(123, 228, 60, 0.45);  color: $key-lime; }
+}
+
+// Project tag:  <span class="ic-tag">volunteer-platform</span>
+.ic-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+
+  &::before { content: '# '; opacity: 0.6; }
+}
+
+// Live activity:  <span class="ic-activity">3 projects shipping now</span>
+.ic-activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 3px;
+    background: var(--color-accent);
+    animation: ic-node-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
 
 // ---- cinematic section rhythm --------------------------------------------------
 .section { padding: 128px 0; }
 .section-sm { padding: 88px 0; }
 .section .title, .section-title { margin-bottom: 56px; }
 
-// ---- surfaces: hairlines, never shadows ----------------------------------------
+// ---- surfaces: dark keycap cards -----------------------------------------------
 .card,
 .go-step,
 .file-step {
   background: var(--color-bg-accent);
   border: 1px solid var(--border-subtle);
-  border-radius: 0;
-  box-shadow: none;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  border-radius: var(--key-radius-lg);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.55);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     border-color: var(--border-strong);
-    box-shadow: none;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 rgba(0, 0, 0, 0.55);
   }
+}
+
+// ---- LIGHT SECTIONS: white stage, ink keycap cards ------------------------------
+// <section class="section-light"> … white rounded panel on the ink stage.
+// Content cards inside are keycaps too: 2px ink stroke + hard 3px shadow,
+// each tagged with a mono `> verb` in its own accent (lime, violet, cyan).
+.section-light {
+  background: #FFFFFF;
+  color: var(--color-ink);
+  border-radius: var(--key-radius-lg);
+  padding: 72px 0;
+
+  h1, h2, h3, h4, h5, h6, p, li {
+    color: var(--color-ink);
+    text-shadow: none;
+  }
+
+  .section-title, .title { color: var(--color-ink); }
+}
+
+// Section heading with a lime keycap marker:  <h2 class="ic-title-key">What We Do</h2>
+.ic-title-key {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 26px;
+    height: 30px;
+    border-radius: 9px;
+    background: $key-lime;
+    box-shadow: 0 3px 0 $key-lime-press;
+  }
+}
+
+// The keycap content card (light surfaces)
+.ic-card {
+  background: #FFFFFF;
+  color: var(--color-ink);
+  border: 2px solid var(--color-ink);
+  border-radius: 16px;
+  box-shadow: 0 3px 0 var(--color-ink);
+  padding: 26px 24px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 var(--color-ink);
+  }
+
+  h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-ink);
+    text-shadow: none;
+    margin: 0;
+  }
+
+  p { color: rgba(11, 14, 20, 0.72); text-shadow: none; }
+}
+
+// Mono prompt tag inside a card:  <p class="ic-card-verb">run</p>
+// Accent cycles by position, or force with --lime / --violet / --cyan.
+.ic-card-verb {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+  color: $key-lime-press;
+
+  &::before { content: '> '; }
+
+  &--lime   { color: $key-lime-press; }
+  &--violet { color: $key-violet-press; }
+  &--cyan   { color: $key-cyan-press; }
+}
+// auto-cycle accents when cards sit in a row
+.ic-card:nth-child(3n+2) .ic-card-verb:not([class*='--']) { color: $key-violet-press; }
+.ic-card:nth-child(3n)   .ic-card-verb:not([class*='--']) { color: $key-cyan-press; }
+
+// Card personality: icon, tagline, and a meta row of people + difficulty.
+//   <span class="ic-card-icon">🚀</span>
+//   <p class="ic-card-tagline">Build. Compete. Solve real problems.</p>
+//   <div class="ic-card-meta"><div class="ic-avatars">…</div>
+//     <span class="ic-difficulty" data-level="2">intermediate</span></div>
+.ic-card-icon {
+  display: block;
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.ic-card-tagline {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: rgba(11, 14, 20, 0.62);
+  margin: 8px 0 0;
+}
+
+.ic-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 2px dashed rgba(11, 14, 20, 0.14);
+}
+
+// Difficulty: three tiny keycap squares, filled to level (1–3).
+.ic-difficulty {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: rgba(11, 14, 20, 0.55);
+
+  i {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    border: 1.5px solid var(--color-ink);
+    background: transparent;
+    font-style: normal;
+    margin-right: 1px;
+  }
+
+  &[data-level="1"] i:nth-of-type(1) { background: $key-lime; }
+  &[data-level="2"] i:nth-of-type(-n+2) { background: $key-yellow; }
+  &[data-level="3"] i { background: $key-orange; }
+}
+
+// Gradient pop text — one word of a headline, never the whole line.
+// <span class="ic-gradient-text">together</span>
+.ic-gradient-text {
+  background: var(--gradient-pop);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+// ---- command palette (⌘K): "Ask Isolated Command" ---------------------------------
+// Trigger chip lives in the navbar; ic-palette.js opens the overlay.
+.ic-palette-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: .5rem;
+  padding: 7px 14px;
+  border-radius: var(--key-radius);
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted) !important;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, transform 0.12s ease;
+
+  kbd {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    border-bottom-width: 2.5px;              // a keycap, of course
+    background: var(--color-bg-accent);
+    color: var(--color-text-light);
+  }
+
+  &:hover, &:focus {
+    border-color: var(--color-accent);
+    color: var(--color-text-light) !important;
+    transform: translateY(-1px);
+  }
+}
+
+.ic-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16vh 20px 20px;
+  background: rgba(7, 9, 13, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  &[hidden] { display: none; }
+
+  .ic-palette-panel {
+    width: unquote("min(580px, 100%)"); // unquote: keep libsass from evaluating CSS min()
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+    animation: ic-palette-in 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ic-palette-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono);
+
+    &::before { content: '>'; color: var(--color-accent); font-weight: 700; }
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: 0;
+      outline: none;
+      color: var(--color-text-light);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      height: auto;
+
+      &::placeholder { color: var(--color-text-muted); }
+    }
+
+    kbd {
+      font-size: 10.5px;
+      font-family: var(--font-mono);
+      color: var(--color-text-muted);
+      border: 1px solid var(--border-subtle);
+      border-radius: 5px;
+      padding: 2px 6px;
+    }
+  }
+
+  .ic-palette-list {
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 8px;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: var(--key-radius);
+      color: var(--color-text-light);
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+
+      .ic-palette-hint {
+        margin-left: auto;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-muted);
+      }
+
+      &.active, &:hover {
+        background: rgba(123, 228, 60, 0.10);
+        color: var(--color-accent);
+      }
+    }
+
+    .ic-palette-empty {
+      padding: 18px 14px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+  }
+}
+@keyframes ic-palette-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
 }
 
 // ---- intel label: mono classification eyebrow -----------------------------------
@@ -146,7 +695,7 @@ p, li { color: var(--color-text-light); }
   margin-bottom: 16px;
 }
 
-// ---- status node: pulsing acid dot ----------------------------------------------
+// ---- status node: pulsing lime dot ----------------------------------------------
 // <span class="ic-status"></span> SYSTEM: OPERATIONAL
 .ic-status {
   display: inline-block;
@@ -160,7 +709,7 @@ p, li { color: var(--color-text-light); }
 }
 @keyframes ic-node-pulse {
   0%, 100% { box-shadow: 0 0 0 0 var(--glow-accent); }
-  50%      { box-shadow: 0 0 0 6px rgba(255, 0, 51, 0); }
+  50%      { box-shadow: 0 0 0 6px rgba(123, 228, 60, 0); }
 }
 
 // ---- ticker: the recruitment marquee ---------------------------------------------
@@ -169,7 +718,7 @@ p, li { color: var(--color-text-light); }
   overflow: hidden;
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(7, 9, 13, 0.6);
   padding: 9px 0;
 
   .ic-ticker-track {
@@ -189,32 +738,60 @@ p, li { color: var(--color-text-light); }
   to   { transform: translateX(-50%); }
 }
 
-// ---- hero (ic-hero): brutalist mega type ------------------------------------------
-.ic-hero { position: relative; overflow: hidden; }
+// ---- hero (ic-hero): big left-aligned keycap stage --------------------------------
+// Editorial, not a business-card center stack: copy hugs the left edge like a
+// terminal prompt, the opportunity keys drift down the right.
+.ic-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: unquote("min(92vh, 980px)"); // unquote: keep libsass off CSS min()
+  display: flex;
+  align-items: center;
+}
 .ic-hero .ic-ticker { position: absolute; left: 0; right: 0; bottom: 0; }
 
-.ic-hero-eyebrow {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: var(--tracking-intel);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  border: 1px solid var(--border-subtle);
-  padding: 7px 18px;
-  margin-bottom: 32px;
+.ic-hero .block {
+  text-align: left;
+  max-width: 780px;
 }
 
-.ic-hero-headline {
+// Terminal prompt eyebrow — `> curiosity starts here_` with a blinking cursor
+// (.slider .block p sets its own color at 0,2,1 — match it to win the cascade)
+.ic-hero-eyebrow,
+.slider .block p.ic-hero-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--color-accent);
+  border: 0;
+  padding: 0;
+  margin-bottom: 28px;
+
+  &::before { content: '> '; }
+  &::after {
+    content: '_';
+    animation: ic-cursor-blink 1.1s steps(1) infinite;
+  }
+}
+@keyframes ic-cursor-blink {
+  0%, 55%  { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+
+// (.slider .block h1 sets its own size at 0,2,1 — match it to win the cascade)
+.ic-hero-headline,
+.slider .block h1.ic-hero-headline {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(3.2rem, 10vw, 9rem);
-  letter-spacing: -0.03em;
-  line-height: 0.9;
-  text-transform: uppercase;                 // youth/brutalist — full caps
+  font-weight: 700;
+  font-size: clamp(3.2rem, 8.5vw, 7.5rem);   // BIG — the hero is the picture
+  letter-spacing: var(--tracking-brutal);
+  line-height: 1.0;
+  text-transform: none;                 // sentence case — "Press the keys."
   color: var(--color-text-light);
-  margin: 0 auto 28px;
+  margin: 0 0 28px;
   max-width: 14ch;
 }
 
@@ -226,23 +803,25 @@ p, li { color: var(--color-text-light); }
   line-height: 1.65;
   letter-spacing: 0;
   text-transform: none;
-  max-width: 46ch;
-  margin: 0 auto 44px;
+  max-width: 52ch;
+  margin: 0 0 44px;
 }
 
 .ic-hero-actions {
   display: flex;
   gap: 14px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 
-// ---- pipeline timeline: hairline spine + acid nodes --------------------------------
-// Markdown-friendly structure (goldmark unsafe HTML in any content file):
-//   <div class="ic-pipeline">
-//     <div class="ic-stage"><p class="ic-stage-code">STAGE_01 // 48 HOURS</p>
-//       <h3>The Code Red Challenge</h3><p>…</p></div>
-//   </div>
+// Center-stack fallback on small screens — left-rag reads cramped there.
+@media (max-width: 767px) {
+  .ic-hero .block { text-align: center; }
+  .ic-hero-headline, .ic-hero-sub { margin-left: auto; margin-right: auto; }
+  .ic-hero-actions { justify-content: center; }
+}
+
+// ---- pipeline timeline: hairline spine + lime nodes --------------------------------
 .ic-pipeline {
   position: relative;
   border-left: 1px solid var(--border-subtle);
@@ -263,7 +842,7 @@ p, li { color: var(--color-text-light); }
       top: 6px;
       width: 11px;
       height: 11px;
-      border-radius: 50%;
+      border-radius: 4px;                       // tiny keycap, not a dot
       background: var(--color-bg-darker);
       border: 1px solid var(--border-strong);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -272,7 +851,7 @@ p, li { color: var(--color-text-light); }
     &:hover::before {
       background: var(--color-accent);
       border-color: var(--color-accent);
-      box-shadow: 0 0 18px 2px var(--glow-accent);
+      box-shadow: 0 3px 0 var(--color-accent-press);
     }
 
     .ic-stage-code {
@@ -304,7 +883,7 @@ p, li { color: var(--color-text-light); }
   height: 420px;
   pointer-events: none;
   background: radial-gradient(ellipse at center, var(--glow-accent) 0%, transparent 65%);
-  opacity: 0.35;
+  opacity: 0.3;
   filter: blur(28px);
   z-index: 0;
 }
@@ -351,10 +930,9 @@ p, li { color: var(--color-text-light); }
 
 // ---- editorial prose: the Publisher Markdown reading layer -----------------------
 // Long-form content (docs pages, dispatches, learn posts) renders inside
-// .post-content. This is the "typography plugin" of the theme: a premium
-// whitepaper register — Inter at a ~70ch measure, bloodline-accented links and
-// rules, mono metrics — so markdown written by any child site reads like
-// high-end editorial with zero extra markup.
+// .post-content. Premium whitepaper register — Inter at a ~70ch measure,
+// lime-accented links and rules, mono metrics — so markdown written by any
+// child site reads like high-end editorial with zero extra markup.
 .post-content {
   font-family: var(--font-sans);
   font-size: 17px;
@@ -376,7 +954,7 @@ p, li { color: var(--color-text-light); }
 
   h2 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.02em;
     text-transform: none;
     font-size: clamp(26px, 3.2vw, 38px);
@@ -403,7 +981,7 @@ p, li { color: var(--color-text-light); }
 
   blockquote {
     border-left: 2px solid var(--color-accent);
-    background: rgba(255, 0, 51, 0.05);
+    background: rgba(123, 228, 60, 0.06);
     padding: 0.6rem 1.4rem;
     margin: 1.8rem 0;
     font-style: normal;
@@ -416,6 +994,7 @@ p, li { color: var(--color-text-light); }
     font-size: 0.85em;
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid var(--border-subtle);
+    border-radius: 6px;
     padding: 0.12em 0.45em;
     color: var(--color-text-light);
   }
@@ -423,7 +1002,7 @@ p, li { color: var(--color-text-light); }
   pre {
     background: var(--color-bg-accent);
     border: 1px solid var(--border-subtle);
-    border-radius: 0;
+    border-radius: var(--key-radius);
     padding: 1.4rem;
     overflow-x: auto;
     margin: 1.8rem 0;
@@ -473,6 +1052,7 @@ p, li { color: var(--color-text-light); }
 
   img {
     border: 1px solid var(--border-subtle);
+    border-radius: var(--key-radius);
     max-width: 100%;
   }
 }
@@ -481,13 +1061,158 @@ p, li { color: var(--color-text-light); }
   .js .reveal-up { opacity: 1; transform: none; transition: none; }
   .ic-ticker .ic-ticker-track { animation: none; }
   .ic-status { animation: none; }
+  .ic-key--float, .ic-key--float-2, .ic-key--float-3 { animation: none; }
+  .ic-hero-eyebrow::after { animation: none; }
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
 }
 
-// Define the primary brand colour for easy updating
-$bloodline-red: #FF0033;
+// ---- listing cards: every card is a keycap with a mono verb tag --------------------
+// The verb is injected by CSS (no template changes needed on child sites):
+// projects say `> build`, learn articles `> learn`, people `> join`.
+// Accent cycles lime → violet → cyan with the card's position in the grid.
+@mixin card-verb($verb) {
+  &::before {
+    content: '> #{$verb}';
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: $key-lime;
+    margin-bottom: 10px;
+  }
+}
 
+.page-wrapper .post-card { @include card-verb('learn'); }
+.project-card .project-body { @include card-verb('build'); }
+.team-card { @include card-verb('join'); }
+
+// accent cycling by grid position (columns wrap the cards, so look at parents)
+.portfolio-work [class*='col-']:nth-of-type(3n+2) .project-body::before,
+.page-wrapper [class*='col-']:nth-of-type(3n+2) .post-card::before,
+.team-grid .team-card:nth-of-type(3n+2)::before { color: $key-violet; }
+
+.portfolio-work [class*='col-']:nth-of-type(3n) .project-body::before,
+.page-wrapper [class*='col-']:nth-of-type(3n) .post-card::before,
+.team-grid .team-card:nth-of-type(3n)::before { color: $key-cyan; }
+
+// SVG fallback covers (site logo used as placeholder) — contain, don't crop
+.project-cover[src$='.svg'] {
+  object-fit: contain;
+  padding: 32px;
+  background: var(--color-bg-darker);
+}
+
+// "read more" arrows pick up the accent system
+.btn-view-more {
+  color: var(--color-accent) !important;
+  font-family: var(--font-mono);
+  font-size: 13px !important;
+}
+
+// ---- page titles: terminal prompt header, not a colored slab ------------------------
+// _common.scss paints .page-title with a dark-lime .overly overlay — kill it
+// and restyle as a left-aligned prompt header matching the hero.
+.page-title {
+  padding: 140px 0 56px;
+  background: transparent;
+
+  &::before { display: none; }        // the .overly slab
+
+  .block {
+    text-align: left;
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      letter-spacing: var(--tracking-display);
+      text-transform: none;
+      color: var(--color-text-light);
+      margin-bottom: 10px;
+
+      b { font-weight: 700; }
+    }
+
+    h3 {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-accent);
+      margin: 0;
+
+      &:not(:empty)::before { content: '> '; }
+    }
+  }
+}
+
+// ---- FAQ / docs pages: keycap sidebar + mono TOC ------------------------------------
+// The old FAQ read as a wall of grey. The sidebar becomes a keycap panel that
+// sticks while you scroll; the table of contents is a column of mono prompts.
+.page-wrapper .sticky-top {
+  top: 96px;
+  align-self: flex-start;
+
+  h2 {
+    font-size: clamp(26px, 3vw, 34px);
+  }
+
+  h3 {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: var(--tracking-intel);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 28px 0 10px;
+  }
+
+  li { list-style: none; font-size: 13.5px; color: var(--color-text-muted); }
+}
+
+#TableOfContents {
+  background: var(--color-bg-accent);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--key-radius-lg);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.65);
+  padding: 14px 6px;
+
+  ul { margin: 0; padding: 0; }
+  ul ul { padding-left: 16px; }
+
+  a {
+    display: block;
+    padding: 7px 14px;
+    border-radius: var(--key-radius);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-muted);
+    transition: color 0.15s ease, background 0.15s ease, padding-left 0.15s ease;
+
+    &::before { content: '> '; opacity: 0; transition: opacity 0.15s ease; }
+
+    &:hover {
+      color: var(--color-accent);
+      background: rgba(123, 228, 60, 0.08);
+      padding-left: 20px;
+
+      &::before { opacity: 1; }
+    }
+  }
+}
+
+// FAQ answers rendered from markdown headings read better with breathing room
+.page-wrapper .col-md-8 > h2,
+.page-wrapper .col-md-8 .post-content h2 {
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+// Sidebar "current" pills got a lime background — ink text for contrast.
+.widget a.current { color: var(--color-ink) !important; }
+
+// ---- certification grid (re-accented to keycap lime) -------------------------------
 .cert-grid {
   margin-top: 24px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -498,8 +1223,8 @@ $bloodline-red: #FF0033;
   font-size: 13px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  opacity: 0.8;
-  color: $bloodline-red;
+  opacity: 0.9;
+  color: $key-lime;
   text-align: left;
   font-weight: bold;
 }
@@ -511,17 +1236,16 @@ $bloodline-red: #FF0033;
 }
 
 .cert-card {
-  // Hover states for the main card and its children
   &:hover {
-    box-shadow: 0 4px 20px rgba($bloodline-red, 0.15);
-    
+    box-shadow: 0 5px 0 rgba($key-lime, 0.35);
+
     .cert-cover img {
       transform: scale(1.08);
     }
-    
+
     .cert-icon {
-      background: rgba($bloodline-red, 0.25);
-      box-shadow: 0 0 15px rgba($bloodline-red, 0.4);
+      background: rgba($key-lime, 0.25);
+      box-shadow: 0 3px 0 $key-lime-press;
     }
   }
 
@@ -534,7 +1258,7 @@ $bloodline-red: #FF0033;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid rgba($bloodline-red, 0.3);
+    border-bottom: 1px solid rgba($key-lime, 0.3);
 
     img {
       width: 100%;
@@ -548,21 +1272,21 @@ $bloodline-red: #FF0033;
     width: 88px;
     height: 88px;
     margin: 16px auto 16px;
-    border-radius: 50%;
+    border-radius: var(--key-radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba($bloodline-red, 0.10);
-    border: 2px solid $bloodline-red;
-    color: $bloodline-red;
+    background: rgba($key-lime, 0.10);
+    border: 2px solid $key-lime;
+    color: $key-lime;
     font-size: 34px;
     transition: all 0.3s ease;
   }
 
   .team-name {
     line-height: 1.35;
-    font-family: 'Anton', sans-serif;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    text-transform: none;
   }
 }

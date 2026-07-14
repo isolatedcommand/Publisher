@@ -52,6 +52,15 @@
           </li>
           {{ end }}
           {{ end }}
+          {{/* ⌘K palette trigger — hidden when [params.palette] enable = false */}}
+          {{ $palette := site.Params.palette | default dict }}
+          {{ if ne $palette.enable false }}
+          <li class="nav-item nav-cta-item">
+            <a href="#" class="ic-palette-trigger" data-ic-palette-open aria-label="Open command palette" title="{{ $palette.label | default `Ask Isolated Command` }}">
+              <kbd>⌘K</kbd>
+            </a>
+          </li>
+          {{ end }}
           {{/* Config-driven CTA buttons — each child site sets its own via [[params.navbar_buttons]] */}}
           {{ range site.Params.navbar_buttons }}
           {{ if ne .enable false }}
@@ -92,4 +101,5 @@
     </nav>
   </div>
 </header>
+{{ partial "palette.html" . }}
 <!-- /navigation -->

@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid rgba(0, 168, 204, 0.3);
+  border-bottom: 1px solid var(--border-subtle);
 
   @include large-desktop {
     background-attachment: unset;
@@ -41,12 +41,13 @@
     z-index: 1;
 
     h1 {
+      font-family: var(--font-display);
       font-weight: 700;
       font-size: 56px;
-      line-height: 1.2;
-      letter-spacing: 2px;
+      line-height: 1.1;
+      letter-spacing: var(--tracking-brutal);
       padding-bottom: 20px;
-      text-transform: uppercase;
+      text-transform: none;
       margin-bottom: 30px;
       animation: fadeInUp 0.8s ease-out;
 

@@ -37,7 +37,7 @@
       color: white;
 
       &:hover {
-        color: red;
+        color: var(--color-accent);
       }
     }
   }
@@ -55,10 +55,10 @@
         letter-spacing: .5px;
 
         a {
-          color: red;
+          color: var(--color-accent);
 
           &:hover {
-            color: red;
+            color: var(--color-accent);
           }
         }
       }

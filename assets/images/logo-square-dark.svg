@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  
+  <rect x="0" y="0" width="512" height="512" rx="110" fill="#0B0E14"></rect>
+  
+  <g transform="rotate(-7 190 200)">
+    <rect x="98" y="112" width="184" height="184" rx="44" fill="#FFFFFF" opacity="0.85" transform="translate(0,18)"></rect>
+    <rect x="98" y="112" width="184" height="184" rx="44" fill="#0B0E14" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width="12"></rect>
+    <text x="190" y="238" font-family="Space Grotesk, Arial, sans-serif" font-size="104" font-weight="700" fill="#FFFFFF" text-anchor="middle">i</text>
+  </g>
+  
+  <g transform="rotate(5 322 320)">
+    <rect x="230" y="232" width="184" height="184" rx="44" fill="#4E9F2F" transform="translate(0,18)"></rect>
+    <rect x="230" y="232" width="184" height="184" rx="44" fill="#7BE43C" transform="translate(0,8)"></rect>
+    <text x="322" y="366" font-family="Space Grotesk, Arial, sans-serif" font-size="104" font-weight="700" fill="#0B0E14" text-anchor="middle">c</text>
+  </g>
+</svg>

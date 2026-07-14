@@ -19,35 +19,31 @@
       padding-top: 10px;
 
       a {
-        color: red;
-        //color: #3272c8;
+        color: var(--color-text-muted);
         padding: 10px 15px;
 
         font : {
           weight: 500;
-          size: 14px;
+          size: 15px;
         }
 
-        text-transform:uppercase;
+        text-transform: none;
 
         &:hover,
         &:focus {
-          color: #3272c8;
-          //color: red;
+          color: var(--color-text-light);
           background: transparent;
         }
       }
 
       a.current {
-        color: #3272c8;
-        //color: red;
+        color: var(--color-accent);
         pointer-events: none;
         cursor: default;
       }
 
       a.current-parent {
-        color: #3272c8;
-        //color: red;
+        color: var(--color-accent);
       }
 
       select {
@@ -56,8 +52,7 @@
     }
 
     .current > .dropdown-toggle {
-      color: #3272c8;
-      //color: red;
+      color: var(--color-accent);
     }
 
     .dropdown-menu {
@@ -65,29 +60,26 @@
       border: none;
       left: -5px;
       box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.08);
-      background: black;
+      background: var(--color-bg-accent);
 
       a {
         text-transform: none;
         font-weight: normal;
-        color: red;
-        //color: #3272c8;
+        color: var(--color-text-muted);
         padding: 10px 20px;
         @include transition-multi (color 0.1s ease, padding 0.3s ease);
 
         &:hover {
-          background: black;
-          color: #3272c8;
-          //color: red;
+          background: var(--color-bg-accent);
+          color: var(--color-accent);
           padding-left: 25px;
         }
       }
 
       a.current {
         padding-left: 25px;
-        color: #3272c8;
-        //color: red;
-        background: black;
+        color: var(--color-accent);
+        background: var(--color-bg-accent);
       }
     }
   }
@@ -95,8 +87,7 @@
 
 .nav .open>a {
   background: transparent;
-  color: red;
-  //color: #3272c8;
+  color: var(--color-text-light);
 }
 
 // Change Bootstrap's default navbar collapse breakpoint of 768px to 992px (=desktop); source: https://silvawebdesigns.com/how-to-change-the-bootstrap-navbar-breakpoint/
@@ -157,34 +148,39 @@
   display: flex;
   align-items: center;
 }
+// Lime keycap CTA — cap + hard side, presses down on hover.
 .navbar-cta {
   display: inline-flex;
   align-items: center;
   gap: .4rem;
   margin-left: .5rem;
-  padding: 8px 18px !important;
-  font-weight: 600;
+  padding: 8px 20px !important;
+  font-weight: 700;
   line-height: 1.2;
-  color: $white !important;
-  background: $color-primary;
-  border: 2px solid $color-primary;
-  border-radius: 8px;
-  transition: all .15s ease;
+  color: var(--color-ink) !important;
+  background: var(--color-accent);
+  border: 0;
+  border-radius: var(--key-radius);
+  box-shadow: 0 4px 0 var(--color-accent-press);
+  transition: transform .12s ease, box-shadow .12s ease;
 }
 .navbar-cta:hover,
 .navbar-cta:focus {
-  filter: brightness(.92);
-  transform: translateY(-1px);
-  color: $white !important;
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--color-accent-press);
+  color: var(--color-ink) !important;
 }
 .navbar-cta--outline {
   background: transparent;
-  color: $color-primary !important;
+  color: var(--color-text-light) !important;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 0 rgba(255, 255, 255, 0.28);
 }
 .navbar-cta--outline:hover,
 .navbar-cta--outline:focus {
-  background: $color-primary;
-  color: $white !important;
+  background: transparent;
+  border-color: var(--color-accent);
+  color: var(--color-accent) !important;
 }
 
 // Role-gated menu items: hidden until revealed for the right role (data-mgr).

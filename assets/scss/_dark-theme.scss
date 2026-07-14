@@ -1,30 +1,40 @@
-// Isolated Command — premium OLED design system
-// Brand marks: #e80f12 (red <IC/>), #3071c4 (blue COMMAND) — logo/identity contexts.
-// Interaction accent: one electric cyan, used sparingly (hover states, 1px borders).
-// Benchmarks: Linear / Vercel / Stripe — pitch-black surfaces, hairline borders,
-// tight display tracking, cinematic negative space, no heavy drop shadows.
+// Isolated Command — keycap design system
+// Identity source: the logo. Two keycaps — "isolated" (white key, ink stroke)
+// + "command" (lime key) — on an ink #0B0E14 stage. Every surface speaks
+// keycap: rounded caps, hard offset shadows (pressed-key depth, never blur),
+// monospace `> verb` prompts, accents lime / violet / cyan.
 
 :root {
-  --color-primary: #e80f12;        /* Brand red (Isolated tag) */
-  --color-secondary: #3071c4;      /* Brand blue (Command text) */
-  --color-tertiary: #2a5ab5;       /* Dark blue accent */
-  --color-bg-dark: #0A0A0A;        /* OLED near-black surface */
-  --color-bg-darker: #000000;      /* True black base */
-  --color-bg-accent: #111113;      /* Elevated surface (cards, panels) */
+  --color-primary: #7BE43C;        /* Keycap lime — THE brand accent */
+  --color-secondary: #A78BFA;      /* Keycap violet (hack) */
+  --color-tertiary: #38BDF8;       /* Keycap cyan (learn) */
+  --color-bg-dark: #0B0E14;        /* Ink — the logo's stage */
+  --color-bg-darker: #07090D;      /* Deeper ink base */
+  --color-bg-accent: #12161F;      /* Elevated surface (cards, panels) */
   --color-text-light: #FAFAFA;     /* Stark high-contrast white */
-  --color-text-muted: #B8B8C2;     /* Muted zinc — brightened for legibility over the live 3D field */
-  --color-accent-1: #e80f12;       /* Brand red */
-  --color-accent-2: #3071c4;       /* Brand blue */
-  --color-accent: #FF0033;         /* THE accent — Bloodline Red; feedback, highlights + node illumination ONLY */
+  --color-text-muted: #B8BDC9;     /* Muted slate */
+  --color-accent-1: #7BE43C;       /* Lime (run/build) */
+  --color-accent-2: #A78BFA;       /* Violet (hack/solve) */
+  --color-accent-3: #38BDF8;       /* Cyan (learn) */
+  --color-accent: #7BE43C;         /* THE accent — keycap lime */
+  --color-accent-press: #4E9F2F;   /* Lime key side — hard offset shadows */
+  --color-pop-yellow: #FFE14D;     /* Electric yellow (achievements, sparks) */
+  --color-pop-orange: #FF9E57;     /* Orange (energy, streaks) */
+  --color-pop-pink: #F97BC8;       /* Pink (community, play) */
+  --gradient-pop: linear-gradient(120deg, #7BE43C 0%, #38BDF8 45%, #A78BFA 80%, #F97BC8 100%);
+  --color-ink: #0B0E14;            /* Ink — text on lime keys, strokes */
   --border-subtle: rgba(255, 255, 255, 0.08);   /* 1px hairline borders */
-  --border-strong: rgba(255, 255, 255, 0.16);   /* hover-state hairlines */
-  --glow-accent: rgba(255, 0, 51, 0.30);        /* bloodline illumination */
+  --border-strong: rgba(255, 255, 255, 0.18);   /* hover-state hairlines */
+  --glow-accent: rgba(123, 228, 60, 0.30);      /* lime illumination */
   --glow-size: 0.1em;
-  --tracking-display: -0.04em;     /* razor-tight display tracking */
-  --tracking-brutal: -0.05em;      /* mega hero tracking */
+  --key-radius: 12px;              /* small keycap corners (buttons, tags) */
+  --key-radius-lg: 22px;           /* large keycap corners (cards, logo keys) */
+  --key-shadow: 0 5px 0;           /* hard pressed-key depth — pair with a side color */
+  --tracking-display: -0.02em;     /* display tracking — Space Grotesk needs little */
+  --tracking-brutal: -0.03em;      /* mega hero tracking */
   --tracking-intel: 0.22em;        /* mono eyebrows / classification labels */
   --font-sans: 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Poppins', sans-serif;
-  --font-display: 'Syne', 'Anton', 'Oswald', var(--font-sans);
+  --font-display: 'Space Grotesk', 'Syne', var(--font-sans);
   --font-mono: 'JetBrains Mono', 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 }
 
@@ -52,7 +62,7 @@ body {
     pointer-events: none;
     background: radial-gradient(
       ellipse 80% 50% at 50% -10%,
-      rgba(255, 0, 51, 0.05) 0%,
+      rgba(123, 228, 60, 0.05) 0%,
       transparent 60%
     );
     z-index: -1;
@@ -124,70 +134,32 @@ a {
   position: relative;
 }
 
-// Buttons — outlined, brand blue, arrow slides on hover
+// Buttons — base geometry only; the keycap treatment (color, hard shadow,
+// press-down) lives in custom.scss and wins the cascade.
 .btn,
 .button {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 0.6em;
-  min-width: 9em;
-  padding: 0.8em 1.4em;
-  background-color: transparent;
-  color: var(--color-text-light);
-  border: 0.18em solid var(--color-secondary);
-  border-radius: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  padding: 0.8em 1.6em;
+  border-radius: var(--key-radius);
+  font-weight: 700;
+  letter-spacing: 0;
   text-transform: none;
   cursor: pointer;
-  transition: all 0.4s ease;
-
-  // Arrow on the left, pushes text to the right
-  &::before {
-    content: '\2192'; // →
-    margin-right: auto;
-    font-size: 1.2em;
-    line-height: 1;
-    transition: transform 0.4s ease;
-  }
-
-  &:hover,
-  &:focus {
-    background-color: var(--color-secondary);
-    color: #ffffff;
-
-    &::before {
-      transform: translateX(5px);
-    }
-  }
-}
-
-// Keep variants consistent with the outlined style
-.btn-main,
-.btn-default,
-.btn-view-works {
-  background-color: transparent;
-  color: var(--color-text-light);
-  border-color: var(--color-secondary);
-
-  &:hover {
-    background-color: var(--color-secondary);
-    color: #ffffff;
-  }
 }
 
 // Cards & Containers
 .card {
-  background: rgba(42, 34, 24, 0.6);
-  border: 1px solid var(--color-primary);
-  border-radius: 4px;
+  background: var(--color-bg-accent);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--key-radius-lg);
   padding: 24px;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: var(--color-secondary);
-    background: rgba(42, 34, 24, 0.9);
+    border-color: var(--border-strong);
   }
 }
 
@@ -399,7 +371,7 @@ textarea,
   flex-wrap: wrap;
   margin-bottom: 24px;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(48, 113, 196, 0.3);
+  border-bottom: 1px solid var(--border-strong);
 
   .article-action {
     min-width: auto;
@@ -492,15 +464,16 @@ textarea,
   flex-direction: column;
   height: 100%;
   background: var(--color-bg-accent);
-  border: 1px solid rgba(48, 113, 196, 0.3);
-  border-radius: 12px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--key-radius-lg);
   overflow: hidden;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.65);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: translateY(-6px);
-    border-color: var(--color-secondary);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+    box-shadow: 0 7px 0 var(--color-accent-press);
   }
 
   .project-media {
@@ -562,23 +535,24 @@ textarea,
   }
 }
 
-// Learn article cards (learn listing)
+// Learn article cards (learn listing) — keycaps with a mono verb tag
 .page-wrapper .post-card {
   background: var(--color-bg-accent);
-  border: 1px solid rgba(48, 113, 196, 0.3);
-  border-radius: 12px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--key-radius-lg);
   padding: 24px;
   margin-bottom: 30px;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.65);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-4px);
-    border-color: var(--color-secondary);
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+    border-color: var(--color-accent-3);
+    box-shadow: 0 7px 0 #2492C7;
   }
 
   .post-thumb img {
-    border-radius: 8px;
+    border-radius: var(--key-radius);
     margin-bottom: 16px;
   }
 
@@ -586,7 +560,7 @@ textarea,
     margin-bottom: 10px;
     a {
       color: var(--color-text-light);
-      &:hover { color: var(--color-secondary); }
+      &:hover { color: var(--color-accent-3); }
     }
   }
 
@@ -596,7 +570,7 @@ textarea,
     margin-bottom: 12px;
 
     ul { display: flex; flex-wrap: wrap; gap: 16px; }
-    i { color: var(--color-secondary); margin-right: 4px; }
+    i { color: var(--color-accent-3); margin-right: 4px; }
   }
 }
 
@@ -608,52 +582,16 @@ textarea,
   background: transparent !important;
 }
 
-// Reading view: subtle warm card instead of black
+// Reading view: a big keycap panel
 .post.post-single {
   background: var(--color-bg-accent);
-  border: 1px solid rgba(48, 113, 196, 0.2);
-  border-radius: 12px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--key-radius-lg);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.65);
   padding: 28px;
 }
 
-// ===== FOOTER (warm, blended, visible icons) =====
-.footer {
-  background: linear-gradient(180deg, transparent 0%, rgba(15, 13, 10, 0.85) 100%) !important;
-  border-top: 1px solid rgba(48, 113, 196, 0.25);
-  min-height: auto;
-  padding: 50px 0 30px;
-
-  p,
-  .copyright {
-    color: var(--color-text-muted) !important;
-  }
-
-  .footer-menu ul li a {
-    color: var(--color-text-light) !important;
-    &:hover { color: var(--color-secondary) !important; }
-  }
-
-  .social-icons {
-    margin: 18px 0;
-    padding: 0;
-
-    li {
-      display: inline-block;
-      margin: 0 10px;
-
-      a i {
-        color: var(--color-secondary) !important;
-        font-size: 22px !important;
-        transition: transform 0.2s ease, color 0.2s ease;
-      }
-
-      a:hover i {
-        color: var(--color-primary) !important;
-        transform: translateY(-3px);
-      }
-    }
-  }
-}
+// Footer styles live in templates/_footer.scss — the standard keycap footer.
 
 // ===== TEAM GRID (who-we-are) =====
 .team-grid {
@@ -667,23 +605,24 @@ textarea,
   display: block;
   text-align: center;
   background: var(--color-bg-accent);
-  border: 1px solid rgba(48, 113, 196, 0.3);
-  border-radius: 12px;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--key-radius-lg);
   padding: 24px 18px;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.65);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: translateY(-6px);
-    border-color: var(--color-secondary);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    transform: translateY(-4px);
+    border-color: var(--color-accent);
+    box-shadow: 0 7px 0 var(--color-accent-press);
   }
 
   .team-photo img {
     width: 120px;
     height: 120px;
     object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid var(--color-secondary);
+    border-radius: var(--key-radius-lg);   // squircle keycap, not a circle
+    border: 2px solid var(--color-accent);
     margin-bottom: 16px;
   }
 
@@ -714,14 +653,14 @@ textarea,
 
 .sitemap-group {
   background: var(--color-bg-accent);
-  border: 1px solid rgba(48, 113, 196, 0.3);
+  border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 22px 24px;
 
   .sitemap-section {
     margin-bottom: 14px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(48, 113, 196, 0.25);
+    border-bottom: 1px solid var(--border-subtle);
     font-size: 18px;
 
     a { color: var(--color-text-light); }

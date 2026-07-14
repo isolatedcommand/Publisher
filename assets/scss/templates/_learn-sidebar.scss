@@ -60,7 +60,7 @@
           }
 
           &:hover {
-            color: red;
+            color: var(--color-accent);
             padding-left: 25px;
           }
 
@@ -74,7 +74,7 @@
 
         a.current {
           color: $white;
-          background: red;
+          background: var(--color-accent);
           border: black;
           border-radius: 30px;
           pointer-events: none;
@@ -103,13 +103,13 @@
           @include transition-multi (background-color 0.3s ease, border 0.3s ease, color 0.1s ease);
 
           &:hover {
-            color: red;
+            color: var(--color-accent);
             background: rgba($color-primary, 0.3);
             border: black;
           }
 
           &:active {
-            color: red;
+            color: var(--color-accent);
             border: 1px solid $color-primary;
             background: $white;
             @include transition (background-color, 0.1s, ease);
@@ -118,7 +118,7 @@
 
         a.current {
           color: $white;
-          background: red;
+          background: var(--color-accent);
           border: black;
           pointer-events: none;
           cursor: default;

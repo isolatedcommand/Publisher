@@ -1,0 +1,35 @@
+{{/* ⌘K command palette — "Ask Isolated Command".
+     Enable per site with [params.palette] enable = true (theme default: on).
+     Actions come from [[params.palette.actions]] (label / link / hint);
+     the main menu is always appended so every page is reachable. */}}
+{{ $palette := site.Params.palette | default dict }}
+{{ if ne $palette.enable false }}
+<div class="ic-palette" id="ic-palette" hidden>
+  <div class="ic-palette-panel" role="dialog" aria-modal="true" aria-label="{{ $palette.label | default `Ask Isolated Command` }}">
+    <div class="ic-palette-input-row">
+      <input type="text" placeholder="{{ $palette.placeholder | default `Ask Isolated Command…` }}" aria-label="Search commands" autocomplete="off" spellcheck="false">
+      <kbd>esc</kbd>
+    </div>
+    <div class="ic-palette-list">
+      {{ range $palette.actions }}
+      <a href="{{ if findRE `^http` .link }}{{ .link }}{{ else }}{{ .link | relLangURL }}{{ end }}"{{ if findRE `^http` .link }} target="_blank" rel="noopener"{{ end }}>
+        <span>{{ .label }}</span>
+        {{ with .hint }}<span class="ic-palette-hint">{{ . }}</span>{{ end }}
+      </a>
+      {{ end }}
+      {{ range site.Menus.main }}
+      {{ if .HasChildren }}
+      {{ range .Children }}
+      <a href="{{ if findRE `^http` .URL }}{{ .URL }}{{ else }}{{ .URL | relLangURL }}{{ end }}"><span>{{ .Name }}</span><span class="ic-palette-hint">go</span></a>
+      {{ end }}
+      {{ else }}
+      <a href="{{ if findRE `^http` .URL }}{{ .URL }}{{ else }}{{ .URL | relLangURL }}{{ end }}"><span>{{ .Name }}</span><span class="ic-palette-hint">go</span></a>
+      {{ end }}
+      {{ end }}
+      <div class="ic-palette-empty" hidden>no keys match — try another word_</div>
+    </div>
+  </div>
+</div>
+{{ $palette_js := resources.Get "js/ic-palette.js" | minify | fingerprint "sha512" }}
+<script src="{{ $palette_js.RelPermalink }}" integrity="{{ $palette_js.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end }}

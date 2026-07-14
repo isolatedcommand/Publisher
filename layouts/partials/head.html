@@ -24,8 +24,9 @@ addEventListener('load', function(){ setTimeout(function(){ icReveal(true); }, 5
 <!-- Consent Mode must run before any Google tag -->
 {{ partial "consent-mode.html" . }}
 
-<!-- base url -->
-{{ if or (eq site.BaseURL "/") (eq site.BaseURL "http://localhost:1313/") (eq site.BaseURL "http://examplesite.org/") (eq site.BaseURL "https://examplesite.org/") (eq site.BaseURL "http://examplesite.com/") (eq site.BaseURL "https://examplesite.com/")}}{{else}}
+<!-- base url — never in `hugo server`: a production base there sends every
+     root-relative URL (logo, CSS, anchors) to the live site instead of localhost -->
+{{ if or hugo.IsServer (eq site.BaseURL "/") (eq site.BaseURL "http://localhost:1313/") (eq site.BaseURL "http://examplesite.org/") (eq site.BaseURL "https://examplesite.org/") (eq site.BaseURL "http://examplesite.com/") (eq site.BaseURL "https://examplesite.com/")}}{{else}}
 <base href="{{ .Permalink }}">
 {{ end }}
 
@@ -68,7 +69,7 @@ addEventListener('load', function(){ setTimeout(function(){ icReveal(true); }, 5
       "@type": "Organization",
       "name": "Isolated Command",
       "url": "{{ $site_base }}",
-      "logo": "{{ $site_base }}/images/logo.png",
+      "logo": "{{ $site_base }}/images/logo.svg",
       "description": "{{ site.Params.description }}",
       "email": "{{ site.Params.email }}",
       "sameAs": [
@@ -263,7 +264,7 @@ addEventListener('load', function(){ setTimeout(function(){ icReveal(true); }, 5
 <!-- Font Awesome (all pages) -->
 <script async src="https://kit.fontawesome.com/92967daa95.js" crossorigin="anonymous"></script>
 
-<!-- Design-system fonts: Syne (display) / Inter (body) / JetBrains Mono (labels & metrics) -->
+<!-- Design-system fonts: Space Grotesk (display, matches logo) / Inter (body) / JetBrains Mono (labels & metrics) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">

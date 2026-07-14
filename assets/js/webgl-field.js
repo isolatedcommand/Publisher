@@ -1,6 +1,6 @@
 /* Isolated Command — WebGL flow-field background.
  * A living, domain-warped FBM "smoke" rendered on the GPU as a single
- * full-screen fragment shader. Mostly true black, with faint Bloodline-Red
+ * full-screen fragment shader. Mostly ink-black, with faint keycap-lime
  * filaments that drift ambiently and *ignite* around the cursor. Opt in per
  * site with `particle_grid = true`.
  *
@@ -67,9 +67,9 @@
     "  float md=length(p-m);",
     "  float glow=uForce*exp(-md*md*3.2);",
     "",
-    "  // compose: near-black base + red filaments in the ridges",
-    "  vec3 base=vec3(0.015,0.015,0.02);",
-    "  vec3 blood=vec3(1.0,0.0,0.2);",
+    "  // compose: ink base + keycap-lime filaments in the ridges",
+    "  vec3 base=vec3(0.014,0.018,0.024);",
+    "  vec3 blood=vec3(0.48,0.89,0.24);",
     "  float ambient=smoothstep(0.58,0.92,f)*0.22*uScroll;",       // faint always-on veins
     "  float ignite=glow*smoothstep(0.30,0.95,f)*0.9;",            // ridges light up near cursor
     "  vec3 col=base;",
