@@ -9,15 +9,15 @@
     <div class="row">
       <div class="col-md-8">
         {{ with .Params.image }}
-        <img class="img-responsive w-100" src="{{ . | relURL }}" alt="">
+        <img class="img-responsive w-100 project-hero-img" src="{{ . | relURL }}" alt="{{ $.Title }}">
         {{ end }}
       </div>
       <div class="col-md-4">
         <div class="project-details">
-          <h4>Project Details</h4>
+          <p class="ic-faq-side-heading">project details</p>
           <ul>
             {{ range .Params.information }}
-            <li><span>{{ .label }} :</span> <strong>{{ .info | markdownify }}</strong></li>
+            <li><span class="project-details-label">{{ .label }}</span> <strong>{{ .info | markdownify }}</strong></li>
             {{ end }}
           </ul>
         </div>
@@ -25,7 +25,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="project-content mt-50">
+        <div class="project-content post-content mt-50">
           {{ .Content }}
         </div>
       </div>

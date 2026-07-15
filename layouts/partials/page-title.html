@@ -1,15 +1,24 @@
-<section class="page-title">
+{{/* Keycap page hero — the same header on every page.
+     Front matter:
+       subtitle    → mono prompt eyebrow (`> curiosity starts here_`)
+       title       → big display headline
+       description → supporting line under the headline
+       hero_image  → optional picture framed as a tilted keycap on the right */}}
+<section class="ic-page-hero">
   <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="block">
-          <h1><b>{{ .Title }}</b></h1>
-          <h3>{{ .Params.description }}</h3>
-                <div>
-       {{ with .Params.slogan }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
+    <div class="ic-page-hero-grid">
+      <div class="ic-page-hero-copy">
+        {{ with .Params.subtitle }}<p class="ic-hero-eyebrow">{{ . | plainify | lower }}</p>{{ end }}
+        <h1 class="ic-page-hero-title reveal-up">{{ .Title }}</h1>
+        {{ with .Params.description }}<p class="ic-page-hero-desc reveal-up d-1">{{ . }}</p>{{ end }}
+        {{ with .Params.slogan }}<div class="ic-page-hero-desc reveal-up d-1">{{ . | $.Page.RenderString (dict "display" "block") }}</div>{{ end }}
       </div>
-        </div>
+
+      {{ with .Params.hero_image }}
+      <div class="ic-page-hero-media reveal-up d-2" aria-hidden="true">
+        <img src="{{ . | relURL }}" alt="" loading="eager" fetchpriority="high">
       </div>
+      {{ end }}
     </div>
   </div>
 </section>

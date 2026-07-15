@@ -8,48 +8,51 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <div class="block">
+        <div class="block ic-listing">
 
-          <div class="row shuffle-wrapper g-4">
-            {{ range .Data.Pages -}}
+          <div class="row g-4" style="row-gap:24px;">
+            {{ range $i, $p := .Data.Pages -}}
+              {{ with $p }}
               {{ $cats := .Params.category -}}
               {{ if not (reflect.IsSlice $cats) }}{{ $cats = slice ($cats) }}{{ end -}}
               {{ $cats = apply $cats "urlize" "." | jsonify -}}
-                      
-              <div class="col-12 col-sm-6 col-md-4 portfolio-item shuffle-item" data-groups="{{ $cats }}">
-                <article class="project-card">
-                                        
-                  <div class="project-media">
-                    {{ if isset .Params "image" -}}
-                      <a href="{{ .RelPermalink }}" class="project-cover-link" aria-label="{{ .Title }}">
-                        <img
-                          src="{{ .Params.image | relURL }}"
-                          alt="{{ .Title }}"
-                          loading="lazy"
-                          class="project-cover"
-                        >
-                      </a>
-                    {{- else -}}
-                      <!-- fallback background -->
-                      <div class="project-cover project-cover--placeholder"></div>
-                    {{- end }}
-                  </div>
-                    
+
+              <div class="col-12 col-sm-6 col-md-4 portfolio-item d-flex" data-groups="{{ $cats }}">
+                {{/* typography-led keycap card — covers dropped, the
+                     front matter (stack, team) is the visual interest */}}
+                <a class="project-card" href="{{ .RelPermalink }}">
+                  <span class="ic-key-index" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
                   <div class="project-body">
-                    <h3 class="project-title">
-                      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                    </h3>
+                    <h3 class="project-title">{{ .Title }}</h3>
                     {{ with .Params.description }}
                       <p class="project-desc">{{ . }}</p>
+                    {{ end }}
+
+                    {{/* mine the `information` front matter for community meta */}}
+                    {{ $team := "" }}{{ $stack := "" }}
+                    {{ range .Params.information }}
+                      {{ if eq .label "Team Members" }}{{ $team = .info }}{{ end }}
+                      {{ if eq .label "Stack" }}{{ $stack = .info }}{{ end }}
+                    {{ end }}
+                    {{ with $stack }}
+                    <div class="project-stack">
+                      {{ range first 3 (split . "·") }}<span class="ic-tag">{{ trim . " " }}</span>{{ end }}
+                    </div>
                     {{ end }}
                   </div>
 
                   <div class="project-footer">
-                    <a href="{{ .RelPermalink }}" class="btn-view-more">View more</a>
+                    {{ with $team }}
+                    <span class="project-team" title="Built by {{ . }}">
+                      <span class="ic-avatars">{{ range first 4 (split . ",") }}<span class="ic-avatar">{{ substr (trim . " ") 0 1 | upper }}</span>{{ end }}</span>
+                    </span>
+                    {{ end }}
+                    <span class="btn-view-more">open</span>
                   </div>
-                </article>
-                
+                </a>
+
               </div>
+              {{ end }}
             {{- end }}
           </div>
 

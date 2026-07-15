@@ -7,38 +7,37 @@
 
 <div class="page-wrapper">
   <div class="container">
-    <div class="row">
-      <div class="col-md-8">
+    {{/* white keycap panel — cards are typography-led (no covers; listing
+         images were the weakest asset), 2-col grid, no sidebar clutter */}}
+    <div class="ic-listing">
+      <div class="row" style="row-gap:24px;">
         {{ $paginator := .Paginate .Data.Pages -}}
-        {{ range $paginator.Pages -}}
-        <div class="post post-card">
-          <div class="post-media post-thumb">
-            {{ if isset .Params "image" -}}
-            <a href="{{ .RelPermalink }}">
-              <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}">
-            </a>
-            {{- end }}
-          </div>
-          <h3 class="post-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          <div class="post-meta">
-            <ul>
-              <li><i class="fas fa-calendar-week"></i> {{ time.Format ":date_full" .PublishDate }}</li>
-              <li><i class="fas fa-user"></i>
-                {{ i18n "posted_by" }}
-                {{ $authors := slice }}{{ if reflect.IsSlice .Params.author }}{{ $authors = .Params.author }}{{ else }}{{ $authors = (slice .Params.author) }}{{ end -}}
-                {{ range $index, $elements := $authors }}{{ if ne $index 0 }}, {{ end }}<a class="text-primary" href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">{{ . }}</a>{{ end }}
-              </li>
-              <li><i class="fas fa-tags"></i>
-                {{ range $index, $elements:= .Params.tags }}{{ if ne $index 0 }}, {{ end }}<a href="{{ `tags/` | relLangURL }}{{ . | urlize }}">{{ . }}</a>{{ end }}
-              </li>
-            </ul>
-          </div>
-          <div class="post-content">
-            <p>{{ .Summary }}</p>
-            <a href="{{ .RelPermalink }}" class="btn btn-main">{{ i18n "read_more" }}</a>
-          </div>
+        {{ range $i, $p := $paginator.Pages -}}
+        {{ with $p }}
+        <div class="col-md-6 d-flex">
+          <a class="post post-card" href="{{ .RelPermalink }}">
+            <span class="ic-key-index" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
+            <div class="post-card-chips">
+              {{ with .Params.categories }}{{ with index . 0 }}<span class="post-card-series">{{ . }}</span>{{ end }}{{ end }}
+              <span class="post-read-time">~{{ .ReadingTime }} min</span>
+            </div>
+
+            <h3 class="post-title">{{ .Title }}</h3>
+            <p class="post-summary">{{ .Summary | plainify | truncate 160 }}</p>
+
+            <div class="post-card-foot">
+              {{ $authors := slice }}{{ if reflect.IsSlice .Params.author }}{{ $authors = .Params.author }}{{ else if .Params.author }}{{ $authors = (slice .Params.author) }}{{ end -}}
+              {{ if $authors }}
+              <span class="ic-avatars">{{ range first 3 $authors }}<span class="ic-avatar">{{ substr . 0 1 | upper }}</span>{{ end }}</span>
+              {{ end }}
+              <span class="post-meta-date">{{ time.Format ":date_medium" .PublishDate }}</span>
+              <span class="post-card-cta">read →</span>
+            </div>
+          </a>
         </div>
+        {{ end }}
         {{- end }}
+      </div>
 
         <!-- pagination -->
         {{ $paginator := .Paginator -}}
@@ -98,10 +97,6 @@
           </ul>
         </nav>
         {{- end }}
-      </div>
-      <div class="col-md-4">
-        {{ partial "learn-sidebar.html" . }}
-      </div>
     </div>
   </div>
 </div>

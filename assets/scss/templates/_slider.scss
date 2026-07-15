@@ -17,22 +17,7 @@
     padding: 150px 0;
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(232, 228, 224, 0.01),
-      rgba(232, 228, 224, 0.01) 2px,
-      transparent 2px,
-      transparent 4px
-    );
-    pointer-events: none;
-  }
+  // (CRT scanline overlay removed — texture noise read as gimmick, not identity)
 
   .block {
     color: var(--color-text-light);

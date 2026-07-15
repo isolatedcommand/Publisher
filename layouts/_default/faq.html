@@ -1,43 +1,49 @@
 {{ define "main" }}
 
-{{ partial "page-title.html" . }}
+{{/* ── Keycap page hero ─────────────────────────────────────────────────
+     Front matter:
+       subtitle    → mono prompt eyebrow  (`> curiosity starts here_`)
+       title       → big display headline
+       description → supporting line under the headline
+       hero_image  → optional picture, framed as a tilted keycap on the right
+       author(s)   → contributor keycap badges                                */}}
+<section class="ic-page-hero">
+  <div class="container">
+    <div class="ic-page-hero-grid">
+      <div class="ic-page-hero-copy">
+        {{ with .Params.subtitle }}<p class="ic-hero-eyebrow">{{ . | plainify | lower }}</p>{{ end }}
+        <h1 class="ic-page-hero-title reveal-up">{{ .Title }}</h1>
+        {{ with .Params.description }}<p class="ic-page-hero-desc reveal-up d-1">{{ . }}</p>{{ end }}
 
-<section class="page-wrapper">
+        <div class="ic-page-hero-meta reveal-up d-2">
+          <span class="ic-badge ic-badge--lime">updated {{ time.Format ":date_long" .Lastmod }}</span>
+          {{ $authors := slice }}
+          {{ if reflect.IsSlice .Params.author }}{{ $authors = .Params.author }}{{ else if .Params.author }}{{ $authors = (slice .Params.author) }}{{ end }}
+          {{ range $authors }}
+          <a class="ic-badge ic-badge--violet" href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">◉ {{ . }}</a>
+          {{ end }}
+        </div>
+      </div>
+
+      {{ with .Params.hero_image }}
+      <div class="ic-page-hero-media reveal-up d-2" aria-hidden="true">
+        <img src="{{ . | relURL }}" alt="" loading="eager" fetchpriority="high">
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="page-wrapper ic-faq">
   <div class="container">
     <div class="row">
-      <div class="col-md-4 sticky-top">
-        <h2>{{ .Title }}</h2>
 
-        
-        {{ with .Params.subtitle }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
-        
-        <p>
-          {{ time.Format ":date_full" .Lastmod }}
-        </p>
-            <li>
-              <i class="ion-android-people"></i>
-              {{ i18n "posted_by" }}
-
-              {{ $authors := slice }}
-              {{ if reflect.IsSlice .Params.author }}
-                {{ $authors = .Params.author }}
-              {{ else }}
-                {{ $authors = (slice .Params.author) }}
-              {{ end }}
-
-              {{ range $index, $elements := $authors }}
-                {{ if ne $index 0 }}, {{ end }}
-                <a class="text-primary"
-                  href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">
-                  {{ . }}
-                </a>
-              {{ end }}
-            </li>
-            
-        <h3>{{ i18n "faq_toc_title" }}</h3>
+      <div class="col-md-4 sticky-top ic-faq-side">
+        <p class="ic-faq-side-heading">on this page</p>
         {{ .TableOfContents }}
       </div>
-      <div class="col-md-8">
+
+      <div class="col-md-8 ic-faq-body">
         {{ .Content }}
 
         {{ $members := where .Pages "Params.photo" "!=" nil }}
@@ -55,6 +61,7 @@
         </div>
         {{ end }}
       </div>
+
     </div>
   </div>
 </section>

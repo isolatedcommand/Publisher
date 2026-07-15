@@ -74,9 +74,9 @@
 {{ if .enable }}
 <section class="section-sm">
   <div class="container">
-    <div class="section-light" style="padding:56px 48px;">
+    <div class="ic-listing">
       {{ with .title }}<h2 class="ic-title-key">{{ . | markdownify }}</h2>{{ end }}
-      {{ with .description }}<p style="margin:6px 0 40px; max-width:60ch;">{{ . | markdownify }}</p>{{ end }}
+      {{ with .description }}<p style="margin:6px 0 40px; max-width:60ch; color:var(--color-text-muted);">{{ . | markdownify }}</p>{{ end }}
       <div class="row" style="row-gap:24px;">
         {{ range $card := .cards }}
         <div class="col-md-4">
