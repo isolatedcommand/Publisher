@@ -23,8 +23,7 @@
           {{ with .sub_headline }}<h4 class="ic-hero-sub reveal-up d-3">{{ . | markdownify }}</h4>{{ end }}
           {{ with .slogan }}<h4 class="reveal-up d-3" style="color:var(--color-text-muted);">{{ . | markdownify }}</h4>{{ end }}
 
-          {{/* CTA row: button1 = primary, button2 = ghost; the rest stay primary
-               for backwards compatibility with existing sites. */}}
+          {{/* CTA row */}}
           <div class="ic-hero-actions reveal-up d-4">
             {{ with .button1 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-main">{{ .label }}</a>{{ end }}{{ end }}
             {{ with .button2 }}{{ if .enable }}<a href="{{ .link | relLangURL }}" class="btn btn-ghost">{{ .label }}</a>{{ end }}{{ end }}
@@ -37,13 +36,7 @@
       </div>
     </div>
 
-    {{/* Floating opportunity keys — banner front matter:
-         keys:
-           - label: "hack"
-             accent: "violet"       # lime / violet / cyan / yellow / orange / pink / ghost
-             caption: "break systems"
-             tilt: "l"              # optional: l / r
-    */}}
+    {{/* Floating opportunity keys */}}
     {{ with .keys }}
     <div class="ic-hero-keys" aria-hidden="true">
       {{ range $i, $k := . }}
@@ -56,7 +49,7 @@
     {{ end }}
   </div>
 
-  {{/* Recruitment ticker — set `ticker` in the banner front matter. */}}
+  {{/* Recruitment ticker */}}
   {{ with .ticker }}
   <div class="ic-ticker">
     <div class="ic-ticker-track">
@@ -78,6 +71,7 @@
       {{ with .title }}<h2 class="ic-title-key">{{ . | markdownify }}</h2>{{ end }}
       {{ with .description }}<p style="margin:6px 0 40px; max-width:60ch; color:var(--color-text-muted);">{{ . | markdownify }}</p>{{ end }}
       <div class="row" style="row-gap:24px;">
+        
         {{ range $card := .cards }}
         <div class="col-md-4">
           <div class="ic-card reveal-up">
@@ -85,8 +79,9 @@
             {{ with $card.icon }}<span class="ic-card-icon">{{ . }}</span>{{ end }}
             <h3>{{ $card.title }}</h3>
             {{ with $card.tagline }}<p class="ic-card-tagline">{{ . }}</p>{{ end }}
+            
             {{ if or $card.contributors $card.difficulty }}
-<div class="ic-card-meta">
+            <div class="ic-card-meta">
               {{ with $card.contributors }}
               <div class="ic-team-tags">
                 {{ range first 4 . }}
@@ -99,13 +94,13 @@
               </div>
               {{ end }}
             </div>
-              {{ end }}
-              {{ with $card.difficulty }}<span class="ic-difficulty" data-level="{{ .level | default 1 }}">{{ .label }}<i></i><i></i><i></i></span>{{ end }}
-            </div>
             {{ end }}
+            
+            {{ with $card.difficulty }}<span class="ic-difficulty" data-level="{{ .level | default 1 }}">{{ .label }}<i></i><i></i><i></i></span>{{ end }}
           </div>
         </div>
         {{ end }}
+        
       </div>
     </div>
   </div>
@@ -115,7 +110,6 @@
 <!-- /what we do -->
 
 <!-- announcement -->
-
 {{ with .Params.announcement }}
 {{ if .enable }}
 <section class="testimonial">
@@ -123,21 +117,16 @@
     <div class="row">
       <div class="col-md-12">
         <div class="block section-title text-center">
-
           {{ with .title }}<p class="ic-intel" style="justify-content:center;">{{ . | markdownify }}</p>{{ end }}
           {{ with .anntitle1 }}<h2 class="reveal-up">{{ . | markdownify }}</h2>{{ end }}
           {{ with .anndesc1 }}<div class="ann-desc reveal-up d-1">{{ . | markdownify }}</div>{{ end }}
-        
         </div>
       </div>
     </div>
   </div>
-   {{ end }}
-{{ end }}
 </section>
-
-<!-- /banner -->
-
+{{ end }}
+{{ end }}
 <!-- /announcement -->
 
 <!-- about
@@ -147,10 +136,8 @@
   <div class="container">
     <div class="row">
         <div class="block">
-
             {{ with .title }}<h1>{{ . | markdownify }}</h1>{{ end }}
- 
-          {{ with .content }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
+            {{ with .content }}{{ . | $.Page.RenderString (dict "display" "block") }}{{ end }}
       </div>
     </div>
   </div>
@@ -205,7 +192,6 @@
       </div>
     </div>
     <div class="row">
-
         <div class="block">
           <ul class="counter-box clearfix">
             {{ range .funfact_item }}
@@ -217,7 +203,6 @@
             {{ end }}
           </ul>
         </div>
-     
     </div>
   </div>
 </section>
