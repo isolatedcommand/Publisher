@@ -83,7 +83,7 @@
             {{ if or $card.contributors $card.difficulty }}
             <div class="ic-card-meta">
               {{ with $card.contributors }}
-              <div class="ic-team-tags">
+              <div class="ic-avatars">
                 {{ range first 4 . }}
                   <span class="ic-tag">{{ replace . " Team" "" }}</span>
                 {{ end }}
