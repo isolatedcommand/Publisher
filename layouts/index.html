@@ -86,12 +86,19 @@
             <h3>{{ $card.title }}</h3>
             {{ with $card.tagline }}<p class="ic-card-tagline">{{ . }}</p>{{ end }}
             {{ if or $card.contributors $card.difficulty }}
-            <div class="ic-card-meta">
+<div class="ic-card-meta">
               {{ with $card.contributors }}
-              <div class="ic-avatars">
-                {{ range first 4 . }}<span class="ic-avatar">{{ substr . 0 1 | upper }}</span>{{ end }}
-                {{ if gt (len .) 4 }}<span class="ic-avatar-more">+{{ sub (len .) 4 }}</span>{{ end }}
+              <div class="ic-team-tags">
+                {{ range first 4 . }}
+                  <span class="ic-tag">{{ replace . " Team" "" }}</span>
+                {{ end }}
+                
+                {{ if gt (len .) 4 }}
+                  <span class="ic-tag-more">+{{ sub (len .) 4 }}</span>
+                {{ end }}
               </div>
+              {{ end }}
+            </div>
               {{ end }}
               {{ with $card.difficulty }}<span class="ic-difficulty" data-level="{{ .level | default 1 }}">{{ .label }}<i></i><i></i><i></i></span>{{ end }}
             </div>
