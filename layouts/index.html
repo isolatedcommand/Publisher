@@ -85,11 +85,11 @@
               {{ with $card.contributors }}
               <div class="ic-avatars">
                 {{ range first 4 . }}
-                  <span class="ic-tag">{{ replace . " Team" "" }}</span>
+                  <span class="ic-avatar">{{ replace . " Team" "" }}</span>
                 {{ end }}
                 
                 {{ if gt (len .) 4 }}
-                  <span class="ic-tag-more">+{{ sub (len .) 4 }}</span>
+                  <span class="ic-aavatar-more">+{{ sub (len .) 4 }}</span>
                 {{ end }}
               </div>
               {{ end }}
