@@ -1,0 +1,9 @@
+{{- /* Mermaid code fences render to <pre class="mermaid">; the loader in
+       baseof.html initialises only on pages that actually contain one.
+       Keeps the org chart editable as plain markdown in the repo. */ -}}
+<div class="ic-mermaid">
+  <pre class="mermaid" aria-label="Diagram">
+{{- .Inner | htmlEscape | safeHTML }}
+  </pre>
+</div>
+{{- .Page.Store.Set "hasMermaid" true -}}

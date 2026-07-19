@@ -1340,10 +1340,13 @@ p, li { color: var(--color-text-light); }
 .post-card:hover .ic-key-index,
 .project-card:hover .ic-key-index { color: rgba(123, 228, 60, 0.18); }
 
-// equal rows: Bootstrap 3 rows are block+floats — force flex so columns
-// stretch and every key in a row is the same height
+// equal rows: Bootstrap 3 rows are block+floats, so inline row-gap is dead and
+// wrapped cards jam together. Force flex + real column spacing everywhere cards
+// live: listings, projects, and the organisation pages.
 .portfolio-work .row,
-.ic-listing .row {
+.ic-listing .row,
+.org-page .org-layer .row,
+.orgteam-page .row {
   display: flex;
   flex-wrap: wrap;
   margin-left: -14px;
@@ -1351,7 +1354,9 @@ p, li { color: var(--color-text-light); }
 }
 // keys need air between them — BS3's 15px gutter reads as touching
 .portfolio-work .portfolio-item,
-.ic-listing [class*='col-'] {
+.ic-listing [class*='col-'],
+.org-page .org-layer .row > [class*='col-'],
+.orgteam-page .row > [class*='col-'] {
   padding-left: 14px;
   padding-right: 14px;
   margin-bottom: 28px;
@@ -1563,6 +1568,542 @@ p, li { color: var(--color-text-light); }
     &:hover { color: var(--color-accent); }
   }
 }
+
+// ---- organisation profile (layouts/_default/organisation.html) ----------------------
+// Three layers wired like a keyboard: council key, operations row, community
+// row — joined by a hairline rail, no corporate org chart in sight.
+.org-page {
+  .org-tagline {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--color-text-muted);
+    max-width: 62ch;
+    margin: -20px 0 56px;
+  }
+
+  .org-layer { position: relative; }
+
+  .org-layer-tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: var(--tracking-intel);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 18px;
+  }
+
+  .org-purpose {
+    color: var(--color-text-muted);
+    max-width: 60ch;
+    margin: 6px 0 34px;
+  }
+
+  // the rail: one hairline joining the layers, a keycap node at its foot
+  .org-rail {
+    width: 2px;
+    height: 72px;
+    margin: 40px auto;
+    background: linear-gradient(180deg, var(--border-strong), var(--border-subtle));
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -7px;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      background: var(--color-accent);
+      box-shadow: 0 2px 0 var(--color-accent-press);
+    }
+  }
+
+  // council: one wide elevated key
+  .org-council {
+    position: relative;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.7);
+    padding: 40px clamp(24px, 4vw, 48px) 34px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
+
+    &:hover {
+      transform: translateY(2px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .org-council-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 10px;
+      margin: 6px 0 26px;
+
+      .ic-key { font-size: 14px; padding: 7px 18px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.55); }
+      .ic-key--lime   { box-shadow: 0 4px 0 #4E9F2F; }
+      .ic-key--violet { box-shadow: 0 4px 0 #7C5CD6; }
+      .ic-key--cyan   { box-shadow: 0 4px 0 #2492C7; }
+      .ic-key--yellow { box-shadow: 0 4px 0 #D9AF1B; }
+      .ic-key--orange { box-shadow: 0 4px 0 #D96D24; }
+      .ic-key--pink   { box-shadow: 0 4px 0 #C74A97; }
+    }
+
+    .org-objective {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--color-text-muted);
+      border-top: 2px dashed var(--border-subtle);
+      padding-top: 18px;
+      margin: 0;
+      max-width: none;
+    }
+
+    .org-council-foot {
+      border-top: 2px dashed var(--border-subtle);
+      padding-top: 18px;
+      margin-top: 6px;
+    }
+  }
+
+  .org-council--link { text-decoration: none; display: block; }
+  .org-council--link:hover .org-card-open { text-decoration: underline; }
+
+  // team / community cards: same dark-key recipe as the listings
+  .org-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-accent);
+    color: var(--color-text-light);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.7);
+    padding: 22px 22px 18px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
+
+    &:hover {
+      transform: translateY(2px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.7);
+    }
+
+    .ic-card-verb { margin-bottom: 8px; }
+
+    .org-card-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      line-height: 1.3;
+      color: var(--color-text-light);
+      margin-bottom: 10px;
+    }
+
+    .org-card-body {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--color-text-muted);
+      margin-bottom: 16px;
+    }
+
+    .org-card-focus {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    // clean footer: just the open cue on a dashed rule
+    .org-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 2px dashed var(--border-subtle);
+    }
+  }
+
+  .org-cta {
+    text-align: center;
+    margin-top: 96px;
+    padding: 56px 24px 64px;
+    border-top: 1px solid var(--border-subtle);
+
+    h2 { margin: 10px 0 30px; }
+  }
+
+  // operations cards that link to a team page
+  .org-card--link {
+    text-decoration: none;
+    .org-card-open {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    &:hover .org-card-open { text-decoration: underline; }
+  }
+
+  // full-structure mermaid chart — big, straight, fills the panel
+  .org-chart {
+    max-width: none;
+    margin-top: 26px;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.7);
+    padding: 36px clamp(16px, 3vw, 44px);
+
+    .ic-mermaid { overflow-x: auto; }
+    pre.mermaid {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+      min-height: 60px;
+      &:not([data-processed]) { color: var(--color-text-muted); font-family: var(--font-mono); font-size: 12px; }
+      svg { width: 100% !important; max-width: 100% !important; height: auto; }
+    }
+  }
+}
+
+// ---- organisation team detail (layouts/our-organisation/single.html) -----------------
+// Volunteer-recruitment style: hero + meet-the-team + journey + what-you-can-do.
+.orgteam-hero {
+  padding-bottom: 24px;
+
+  .orgteam-hero-grid {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    justify-content: space-between;
+  }
+  .orgteam-hero-copy { max-width: 640px; }
+
+  .orgteam-mission {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--color-accent);
+    margin: 4px 0 18px;
+  }
+
+  .orgteam-focus-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 22px 0 28px;
+  }
+
+  // strong visual: the big team icon key with a few floating blank keys
+  .orgteam-hero-art {
+    position: relative;
+    flex: 0 0 300px;
+    height: 300px;
+  }
+  .orgteam-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-4deg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 132px;
+    height: 132px;
+    border-radius: 34px;
+    border: 2px solid var(--color-ink);
+    box-shadow: 0 9px 0 var(--color-ink);
+    color: var(--color-ink);
+    font-size: 54px;
+    z-index: 2;
+
+    &--lime   { background: #7BE43C; }
+    &--violet { background: #A78BFA; }
+    &--cyan   { background: #38BDF8; }
+    &--yellow { background: #FFE14D; }
+    &--orange { background: #FF9E57; }
+    &--pink   { background: #F97BC8; }
+  }
+  .orgteam-art-key {
+    position: absolute;
+    border-radius: 16px;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.6);
+    &--a { width: 64px; height: 64px; top: 24px; right: 40px; transform: rotate(8deg); animation: ic-key-float 5.5s ease-in-out infinite; }
+    &--b { width: 52px; height: 52px; bottom: 30px; left: 20px; transform: rotate(-10deg); animation: ic-key-float 6.5s ease-in-out infinite 0.6s; }
+    &--c { width: 44px; height: 44px; bottom: 60px; right: 30px; transform: rotate(5deg); animation: ic-key-float 7.5s ease-in-out infinite 1.2s; }
+  }
+
+  @media (max-width: 900px) {
+    .orgteam-hero-grid { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .orgteam-hero-art { flex-basis: auto; width: 100%; height: 180px; }
+    .orgteam-icon { left: 90px; }
+  }
+}
+
+.orgteam-page {
+  .orgteam-block { margin-bottom: 84px; }
+  .orgteam-lead {
+    color: var(--color-text-muted);
+    max-width: 60ch;
+    margin: -8px 0 34px;
+  }
+
+  // ── meet the team: equal-height responsive member cards ─────────────
+  // auto-fit so any member count fills the row evenly (no dangling gap)
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+  @media (max-width: 520px)  { .member-grid { grid-template-columns: 1fr; } }
+
+  .member-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.7);
+    padding: 26px 20px 22px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
+
+    &:hover {
+      transform: translateY(2px);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.7);
+    }
+
+    .member-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 26px;
+      border: 2px solid var(--color-ink);
+      box-shadow: 0 4px 0 var(--color-ink);
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      &--lime { background: #7BE43C; } &--violet { background: #A78BFA; }
+      &--cyan { background: #38BDF8; } &--pink { background: #F97BC8; }
+      &--yellow { background: #FFE14D; } &--orange { background: #FF9E57; }
+      img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .member-initial {
+        font-family: var(--font-display);
+        font-size: 40px;
+        font-weight: 700;
+        color: var(--color-ink);
+      }
+    }
+    .member-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-text-light);
+      margin-bottom: 4px;
+    }
+    .member-role {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--color-text-muted);
+    }
+  }
+
+  // forming (no members yet)
+  .orgteam-forming {
+    background: var(--color-bg-accent);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    padding: 40px 32px;
+    text-align: center;
+    .orgteam-forming-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .orgteam-forming-note { color: var(--color-text-muted); max-width: 44ch; margin: 0 auto 22px; }
+  }
+
+  // ── volunteer journey ───────────────────────────────────────────────
+  .journey-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 640px;
+  }
+  .journey-tier {
+    width: 100%;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.7);
+    padding: 22px 26px;
+    &--lead { border-color: rgba(123,228,60,0.4); }
+  }
+  .journey-badge {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--color-ink);
+    border-radius: var(--key-radius);
+    padding: 6px 16px;
+    margin-bottom: 14px;
+    &--start { background: #38BDF8; box-shadow: 0 3px 0 #2492C7; }
+    &--lead  { background: #7BE43C; box-shadow: 0 3px 0 #4E9F2F; }
+  }
+  .journey-list {
+    margin: 0; padding: 0; list-style: none;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 20px;
+    li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13.5px;
+      color: var(--color-text-muted);
+      &::before { content: ''; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 2px; background: var(--color-accent); }
+    }
+  }
+  @media (max-width: 520px) { .journey-list { grid-template-columns: 1fr; } }
+  .journey-arrow {
+    color: var(--color-accent);
+    font-size: 18px;
+    padding: 12px 0;
+  }
+
+  // ── what do you want to do ──────────────────────────────────────────
+  .want-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.7);
+    padding: 24px 22px;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
+
+    &:hover { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.7); }
+    &--lime:hover   { border-color: #7BE43C; }
+    &--violet:hover { border-color: #A78BFA; }
+    &--cyan:hover   { border-color: #38BDF8; }
+    &--pink:hover   { border-color: #F97BC8; }
+
+    .want-emoji { font-size: 30px; line-height: 1; margin-bottom: 16px; }
+    .want-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-text-light);
+      margin-bottom: 8px;
+    }
+    .want-desc { font-size: 13px; line-height: 1.6; color: var(--color-text-muted); }
+  }
+
+  // ── project highlights ──────────────────────────────────────────────
+  .proj-highlight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.7);
+    padding: 22px;
+    .proj-highlight-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--color-text-light); }
+    .proj-highlight-desc { font-size: 13.5px; line-height: 1.6; color: var(--color-text-muted); }
+  }
+  .orgteam-status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 9px;
+    border-radius: 6px;
+    color: var(--color-ink);
+    &--lime { background: #7BE43C; } &--violet { background: #A78BFA; }
+    &--cyan { background: #38BDF8; } &--yellow { background: #FFE14D; }
+    &--orange { background: #FF9E57; } &--pink { background: #F97BC8; }
+  }
+
+  // ── explore other teams ─────────────────────────────────────────────
+  .orgteam-others-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 991px) { .orgteam-others-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px)  { .orgteam-others-grid { grid-template-columns: 1fr; } }
+  .orgteam-other {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    background: var(--color-bg-accent);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--key-radius);
+    padding: 14px 16px;
+    transition: transform 0.12s ease, border-color 0.15s ease;
+    &:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.3); }
+    .orgteam-other-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; flex: 0 0 auto;
+      border-radius: 11px; color: var(--color-ink); font-size: 15px;
+      &--lime { background: #7BE43C; } &--violet { background: #A78BFA; }
+      &--cyan { background: #38BDF8; } &--yellow { background: #FFE14D; }
+      &--orange { background: #FF9E57; } &--pink { background: #F97BC8; }
+    }
+    .orgteam-other-name { font-family: var(--font-display); font-size: 13.5px; font-weight: 600; color: var(--color-text-light); line-height: 1.25; }
+    .orgteam-other-go { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--color-accent); }
+  }
+}
+
+// standalone CTA (team pages render it outside .org-page)
+section.org-cta {
+  text-align: center;
+  margin-top: 40px;
+  padding: 72px 24px 88px;
+  border-top: 1px solid var(--border-subtle);
+  h2 { margin: 10px 0 14px; }
+}
+.org-cta .orgteam-cta-sub { color: var(--color-text-muted); max-width: 46ch; margin: 0 auto 26px; }
+
+// council role cards (layouts/our-organisation/council.html)
+.council-role {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-accent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--key-radius-lg);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.7);
+  padding: 24px 22px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
+
+  &:hover { transform: translateY(2px); border-color: rgba(255,255,255,0.3); box-shadow: 0 2px 0 rgba(0,0,0,0.7); }
+
+  .council-role-key { font-size: 15px; padding: 7px 18px; }
+  .council-role-desc { font-size: 14px; line-height: 1.6; color: var(--color-text-muted); margin: 0; }
+}
+
 
 // ---- certification grid (re-accented to keycap lime) -------------------------------
 .cert-grid {

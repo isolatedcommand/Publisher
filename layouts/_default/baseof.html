@@ -71,6 +71,33 @@ AUTHOR WEBSITE: https://isolatedcommand.com
 	{{/* Motion engine: scroll-reveals + page-transition cooperation (all pages) */}}
 	{{ $motion := resources.Get "js/ic-motion.js" | minify | fingerprint "sha512" }}
 	<script defer src="{{ $motion.RelPermalink }}" integrity="{{ $motion.Data.Integrity }}" crossorigin="anonymous"></script>
+
+	{{/* Mermaid — loaded only on pages with a diagram (render hook sets the flag).
+	     Themed to the keycap system: ink surfaces, lime edges, mono labels. */}}
+	{{ if .Store.Get "hasMermaid" }}
+	<script type="module">
+		import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+		mermaid.initialize({
+			startOnLoad: true,
+			securityLevel: 'strict',
+			fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+			theme: 'base',
+			flowchart: { curve: 'linear', nodeSpacing: 70, rankSpacing: 95, padding: 20, useMaxWidth: false },
+			themeVariables: {
+				background: '#0B0E14',
+				primaryColor: '#12161F',
+				primaryTextColor: '#FAFAFA',
+				primaryBorderColor: '#7BE43C',
+				lineColor: 'rgba(255,255,255,0.35)',
+				secondaryColor: '#12161F',
+				tertiaryColor: '#12161F',
+				clusterBkg: 'rgba(255,255,255,0.02)',
+				clusterBorder: 'rgba(255,255,255,0.10)',
+				fontSize: '17px'
+			}
+		});
+	</script>
+	{{ end }}
 </body>
 
 </html>

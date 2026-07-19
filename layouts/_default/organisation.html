@@ -1,0 +1,117 @@
+{{ define "main" }}
+
+{{ partial "page-title.html" . }}
+
+{{/* ── Organisation profile — chart-first, then the three layers ─────────
+     Front-matter driven so any child site can reuse it:
+       council:    { tag, title, purpose, slug, roles: [{label, accent}] }
+       operations: { tag, title, purpose, teams: [{verb, accent, slug, name,
+                     objective, focus: [] }] }
+       community:  { tag, title, purpose, groups: [{verb, accent, name, description }] }
+       org_cta:    { eyebrow, title, label, link }
+     The editable org chart is the Mermaid block in the page body.          */}}
+
+<div class="page-wrapper org-page">
+  <div class="container">
+
+    {{ with .Params.tagline }}
+    <p class="org-tagline reveal-up">{{ . }}</p>
+    {{ end }}
+
+    {{/* ── the full structure, up top (editable Mermaid in the page body) ─ */}}
+    {{ if .Content }}
+    <section class="org-layer org-chart-layer">
+      {{ with .Params.chart_tag }}<p class="org-layer-tag">&gt; {{ . }}</p>{{ end }}
+      {{ with .Params.chart_title }}<h2 class="ic-title-key">{{ . }}</h2>{{ end }}
+      <div class="org-chart post-content">{{ .Content }}</div>
+    </section>
+    <div class="org-rail" aria-hidden="true"></div>
+    {{ end }}
+
+    {{/* ── the council ────────────────────────────────────────────────── */}}
+    {{ with .Params.council }}
+    {{ $chref := printf "%s%s/" $.RelPermalink (.slug | default "command-council") }}
+    <section class="org-layer">
+      <p class="org-layer-tag">&gt; {{ .tag }}</p>
+      <a href="{{ $chref }}" class="org-council org-council--link reveal-up">
+        <span class="ic-key-index" aria-hidden="true">01</span>
+        <h2 class="ic-title-key">{{ .title }}</h2>
+        <p class="org-purpose">{{ .purpose }}</p>
+        <div class="org-council-roles">
+          {{ range .roles }}
+          <span class="ic-key ic-key--{{ .accent | default "ghost" }}">{{ .label | lower }}</span>
+          {{ end }}
+        </div>
+        <div class="org-council-foot">
+          <span class="org-card-open">meet the council &rarr;</span>
+        </div>
+      </a>
+    </section>
+    {{ end }}
+
+    <div class="org-rail" aria-hidden="true"></div>
+
+    {{/* ── operations teams ───────────────────────────────────────────── */}}
+    {{ with .Params.operations }}
+    <section class="org-layer">
+      <p class="org-layer-tag">&gt; {{ .tag }}</p>
+      <h2 class="ic-title-key">{{ .title }}</h2>
+      <p class="org-purpose">{{ .purpose }}</p>
+
+      <div class="row" style="row-gap:24px;">
+        {{ range $i, $t := .teams }}
+        <div class="col-md-4 col-sm-6 d-flex">
+          {{ $href := printf "%s%s/" $.RelPermalink ($t.slug | default (urlize $t.name)) }}
+          <a href="{{ $href }}" class="org-card org-card--link reveal-up d-{{ add (mod $i 3) 1 }}">
+            <span class="ic-key-index" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
+            <p class="ic-card-verb ic-card-verb--{{ $t.accent | default "lime" }}">{{ $t.verb }}</p>
+            <h3 class="org-card-title">{{ $t.name }}</h3>
+            <p class="org-card-body">{{ $t.objective }}</p>
+            <div class="org-card-focus">
+              {{ range $t.focus }}<span class="ic-tag">{{ . }}</span>{{ end }}
+            </div>
+            <div class="org-card-foot">
+              <span class="org-card-open">open &rarr;</span>
+            </div>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    <div class="org-rail" aria-hidden="true"></div>
+
+    {{/* ── community ──────────────────────────────────────────────────── */}}
+    {{ with .Params.community }}
+    <section class="org-layer">
+      <p class="org-layer-tag">&gt; {{ .tag }}</p>
+      <h2 class="ic-title-key">{{ .title }}</h2>
+      <p class="org-purpose">{{ .purpose }}</p>
+
+      <div class="row" style="row-gap:24px;">
+        {{ range $i, $g := .groups }}
+        <div class="col-md-4 d-flex">
+          <div class="org-card reveal-up d-{{ add (mod $i 3) 1 }}">
+            <p class="ic-card-verb ic-card-verb--{{ $g.accent | default "lime" }}">{{ $g.verb }}</p>
+            <h3 class="org-card-title">{{ $g.name }}</h3>
+            <p class="org-card-body">{{ $g.description }}</p>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    {{/* ── join ───────────────────────────────────────────────────────── */}}
+    {{ with .Params.org_cta }}
+    <section class="org-cta reveal-up">
+      <p class="ic-hero-eyebrow">{{ .eyebrow | default "your key is missing from this keyboard" }}</p>
+      <h2>{{ .title }}</h2>
+      <a href="{{ .link | relLangURL }}" class="btn btn-main">{{ .label }}</a>
+    </section>
+    {{ end }}
+
+  </div>
+</div>
+{{ end }}

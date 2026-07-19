@@ -1,0 +1,170 @@
+{{ define "main" }}
+{{ $t := .Params.team }}
+{{ $accent := $t.accent | default "lime" }}
+{{ $slug := .File.ContentBaseName }}
+
+{{/* members for this team, pulled from the Directory data (single source) */}}
+{{ $members := slice }}
+{{ range site.Data.volunteers }}
+  {{ if in (.teams | default slice) $slug }}{{ $members = $members | append . }}{{ end }}
+{{ end }}
+
+{{/* ── hero ──────────────────────────────────────────────────────────── */}}
+<section class="ic-page-hero orgteam-hero">
+  <div class="container">
+    <div class="orgteam-hero-grid">
+      <div class="orgteam-hero-copy">
+        <p class="ic-hero-eyebrow reveal-up">{{ $t.tag | default "operations" }}</p>
+        <h1 class="ic-page-hero-title reveal-up d-1">{{ .Title }}</h1>
+        {{ with $t.tagline }}<p class="orgteam-mission reveal-up d-1">{{ . }}</p>{{ end }}
+        {{ with $t.intro }}<p class="ic-page-hero-desc reveal-up d-2">{{ . }}</p>{{ end }}
+        <div class="orgteam-focus-row reveal-up d-2">
+          {{ range $t.focus }}<span class="ic-tag">{{ . }}</span>{{ end }}
+        </div>
+        <div class="ic-hero-actions reveal-up d-3">
+          <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Join This Team</a>
+          <a href="#what-you-can-do" class="btn btn-ghost">Explore Opportunities</a>
+        </div>
+      </div>
+      <div class="orgteam-hero-art reveal-up d-2" aria-hidden="true">
+        <span class="orgteam-icon orgteam-icon--{{ $accent }}">{{ with $t.icon }}<i class="{{ . }}"></i>{{ end }}</span>
+        <span class="orgteam-art-key orgteam-art-key--a"></span>
+        <span class="orgteam-art-key orgteam-art-key--b"></span>
+        <span class="orgteam-art-key orgteam-art-key--c"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrapper orgteam-page" style="padding-top:0;">
+  <div class="container">
+
+    {{/* ── meet the team ───────────────────────────────────────────────── */}}
+    <section class="orgteam-block">
+      <h2 class="ic-title-key">Meet the team</h2>
+      {{ if $members }}
+      <p class="orgteam-lead">The people behind {{ .Title }} — real volunteers, real contributions.</p>
+      <div class="member-grid">
+        {{ range $members }}
+        <a class="member-card" href="https://directory.isolatedcommand.com/volunteers/{{ .slug }}/" target="_blank" rel="noopener">
+          <span class="member-photo member-photo--{{ .accent | default `lime` }}">
+            {{ if .photo }}<img src="{{ .photo | relURL }}" alt="{{ .name }}" loading="lazy">
+            {{ else }}<span class="member-initial">{{ substr .name 0 1 | upper }}</span>{{ end }}
+          </span>
+          <span class="member-name">{{ .name }}</span>
+          <span class="member-role">{{ .role }}</span>
+        </a>
+        {{ end }}
+      </div>
+      {{ else }}
+      <div class="orgteam-forming">
+        <p class="orgteam-forming-title">This team is just forming.</p>
+        <p class="orgteam-forming-note">Be one of the first faces here — join and help shape how {{ .Title }} works.</p>
+        <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main btn-small">Join This Team</a>
+      </div>
+      {{ end }}
+    </section>
+
+    {{/* ── volunteer journey ───────────────────────────────────────────── */}}
+    <section class="orgteam-block">
+      <h2 class="ic-title-key">Your journey here</h2>
+      <p class="orgteam-lead">Everyone starts as a Volunteer. Grow, and you can lead.</p>
+      <div class="journey-flow">
+        <div class="journey-tier">
+          <div class="journey-badge journey-badge--start">Volunteer</div>
+          <ul class="journey-list">
+            <li>Participate in projects</li>
+            <li>Complete assigned tasks</li>
+            <li>Collaborate with team members</li>
+            <li>Learn new skills</li>
+            <li>Support team activities</li>
+          </ul>
+        </div>
+        <div class="journey-arrow" aria-hidden="true"><i class="fas fa-arrow-down"></i></div>
+        <div class="journey-tier journey-tier--lead">
+          <div class="journey-badge journey-badge--lead">Volunteer Leader</div>
+          <ul class="journey-list">
+            <li>Coordinate volunteers</li>
+            <li>Guide team members</li>
+            <li>Manage activities</li>
+            <li>Support project execution</li>
+            <li>Mentor new volunteers</li>
+            <li>Help organise team operations</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {{/* ── what do you want to do ───────────────────────────────────────── */}}
+    <section class="orgteam-block" id="what-you-can-do">
+      <h2 class="ic-title-key">What do you want to do?</h2>
+      <div class="row" style="row-gap:20px;">
+        {{ $wants := slice
+          (dict "emoji" "🚀" "title" "I want to contribute" "desc" "Join projects and help the team deliver initiatives." "accent" "lime")
+          (dict "emoji" "📚" "title" "I want to learn" "desc" "Develop skills through workshops, mentorship, and hands-on experience." "accent" "violet")
+          (dict "emoji" "👥" "title" "I want to lead" "desc" "Grow into a Volunteer Leader and support other volunteers." "accent" "cyan")
+          (dict "emoji" "🤝" "title" "I want to collaborate" "desc" "Work with other teams, partners, and communities." "accent" "pink")
+        }}
+        {{ range $wants }}
+        <div class="col-md-3 col-sm-6 d-flex">
+          <a class="want-card want-card--{{ .accent }}" href="{{ `connect-now/` | relLangURL }}">
+            <span class="want-emoji">{{ .emoji }}</span>
+            <span class="want-title">{{ .title }}</span>
+            <span class="want-desc">{{ .desc }}</span>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+    </section>
+
+    {{/* ── projects / initiatives ──────────────────────────────────────── */}}
+    {{ with $t.projects }}
+    <section class="orgteam-block">
+      <h2 class="ic-title-key">What we're working on</h2>
+      <div class="row" style="row-gap:20px;">
+        {{ range . }}
+        <div class="col-md-4 col-sm-6 d-flex">
+          <div class="proj-highlight">
+            <span class="orgteam-status orgteam-status--{{ .accent | default "lime" }}">{{ .status }}</span>
+            <span class="proj-highlight-name">{{ .name }}</span>
+            <span class="proj-highlight-desc">{{ .desc }}</span>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    {{/* ── explore other teams ─────────────────────────────────────────── */}}
+    <section class="orgteam-block orgteam-others">
+      <p class="org-layer-tag">&gt; explore other teams</p>
+      <div class="orgteam-others-grid">
+        {{ range .CurrentSection.RegularPages }}
+        {{ if ne .Permalink $.Permalink }}
+        {{ $ot := .Params.team }}
+        <a class="orgteam-other" href="{{ .RelPermalink }}">
+          <span class="orgteam-other-icon orgteam-other-icon--{{ $ot.accent | default `lime` }}"><i class="{{ $ot.icon }}"></i></span>
+          <span class="orgteam-other-name">{{ .Title }}</span>
+          <span class="orgteam-other-go">open &rarr;</span>
+        </a>
+        {{ end }}
+        {{ end }}
+      </div>
+    </section>
+
+  </div>
+</div>
+
+{{/* ── join movement CTA ─────────────────────────────────────────────── */}}
+<section class="org-cta reveal-up">
+  <div class="container">
+    <p class="ic-hero-eyebrow">this is where you come in</p>
+    <h2>Want in?</h2>
+    <p class="orgteam-cta-sub">{{ .Title }} is always looking for people who want to help out. No experience needed — just show up.</p>
+    <div class="ic-hero-actions" style="justify-content:center;">
+      <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Join Isolated Command</a>
+      <a href="{{ .CurrentSection.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
+    </div>
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,86 @@
+{{ define "main" }}
+{{ $c := .Params.council }}
+
+{{/* council members: directory records tagged into command-council */}}
+{{ $members := slice }}
+{{ range site.Data.volunteers }}
+  {{ if in (.teams | default slice) "command-council" }}{{ $members = $members | append . }}{{ end }}
+{{ end }}
+
+{{/* ── hero ──────────────────────────────────────────────────────────── */}}
+<section class="ic-page-hero orgteam-hero">
+  <div class="container">
+    <div class="orgteam-hero-grid">
+      <div class="orgteam-hero-copy">
+        <p class="ic-hero-eyebrow reveal-up">{{ $c.tag | default "governance" }}</p>
+        <h1 class="ic-page-hero-title reveal-up d-1">{{ .Title }}</h1>
+        {{ with $c.tagline }}<p class="orgteam-mission reveal-up d-1">{{ . }}</p>{{ end }}
+        {{ with $c.intro }}<p class="ic-page-hero-desc reveal-up d-2">{{ . }}</p>{{ end }}
+        <div class="ic-hero-actions reveal-up d-3">
+          <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Get involved</a>
+          <a href="{{ .CurrentSection.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
+        </div>
+      </div>
+      <div class="orgteam-hero-art reveal-up d-2" aria-hidden="true">
+        <span class="orgteam-icon orgteam-icon--lime">{{ with $c.icon }}<i class="{{ . }}"></i>{{ end }}</span>
+        <span class="orgteam-art-key orgteam-art-key--a"></span>
+        <span class="orgteam-art-key orgteam-art-key--b"></span>
+        <span class="orgteam-art-key orgteam-art-key--c"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-wrapper orgteam-page" style="padding-top:0;">
+  <div class="container">
+
+    {{/* ── who sits on the council ──────────────────────────────────────── */}}
+    <section class="orgteam-block">
+      <h2 class="ic-title-key">Who's on it</h2>
+      <p class="orgteam-lead">Six roles hold the direction — some are people today, some are seats we're still filling.</p>
+      <div class="row" style="row-gap:24px;">
+        {{ range $c.roles }}
+        <div class="col-md-4 col-sm-6 d-flex">
+          <div class="council-role">
+            <span class="council-role-key ic-key ic-key--{{ .accent | default "ghost" }}">{{ .label | lower }}</span>
+            <p class="council-role-desc">{{ .desc }}</p>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </section>
+
+    {{/* ── the people (from the Directory) ──────────────────────────────── */}}
+    {{ with $members }}
+    <section class="orgteam-block">
+      <h2 class="ic-title-key">The people</h2>
+      <div class="member-grid">
+        {{ range . }}
+        <a class="member-card" href="https://directory.isolatedcommand.com/volunteers/{{ .slug }}/" target="_blank" rel="noopener">
+          <span class="member-photo member-photo--{{ .accent | default `lime` }}">
+            {{ if .photo }}<img src="{{ .photo | relURL }}" alt="{{ .name }}" loading="lazy">
+            {{ else }}<span class="member-initial">{{ substr .name 0 1 | upper }}</span>{{ end }}
+          </span>
+          <span class="member-name">{{ .name }}</span>
+          <span class="member-role">{{ .role }}</span>
+        </a>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+  </div>
+</div>
+
+<section class="org-cta reveal-up">
+  <div class="container">
+    <p class="ic-hero-eyebrow">want a seat at the table?</p>
+    <h2>Help steer what comes next.</h2>
+    <p class="orgteam-cta-sub">Partners, sponsors, and advisors — reach out. Volunteers grow into leaders from the teams up.</p>
+    <div class="ic-hero-actions" style="justify-content:center;">
+      <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Get in touch</a>
+      <a href="{{ .CurrentSection.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
+    </div>
+  </div>
+</section>
+{{ end }}
