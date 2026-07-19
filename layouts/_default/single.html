@@ -41,7 +41,7 @@
               {{ range $index, $elements := $authors }}
                 {{ if ne $index 0 }}, {{ end }}
                 <a class="text-primary"
-                  href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">
+                  href="{{ `volunteers/` | relLangURL }}{{ . | urlize }}">
                   {{ . }}
                 </a>
               {{ end }}

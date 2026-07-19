@@ -20,7 +20,7 @@
           {{ $authors := slice }}
           {{ if reflect.IsSlice .Params.author }}{{ $authors = .Params.author }}{{ else if .Params.author }}{{ $authors = (slice .Params.author) }}{{ end }}
           {{ range $authors }}
-          <a class="ic-badge ic-badge--violet" href="{{ `who-we-are/` | relLangURL }}{{ . | urlize }}">◉ {{ . }}</a>
+          <a class="ic-badge ic-badge--violet" href="{{ `volunteers/` | relLangURL }}{{ . | urlize }}">◉ {{ . }}</a>
           {{ end }}
         </div>
       </div>
