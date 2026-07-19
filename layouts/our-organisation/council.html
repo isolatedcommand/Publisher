@@ -1,10 +1,10 @@
 {{ define "main" }}
 {{ $c := .Params.council }}
 
-{{/* council members: directory records tagged into command-council */}}
+{{/* council members: volunteer records tagged into the-council */}}
 {{ $members := slice }}
 {{ range site.Data.volunteers }}
-  {{ if in (.teams | default slice) "command-council" }}{{ $members = $members | append . }}{{ end }}
+  {{ if in (.teams | default slice) "the-council" }}{{ $members = $members | append . }}{{ end }}
 {{ end }}
 
 {{/* ── hero ──────────────────────────────────────────────────────────── */}}
@@ -18,7 +18,7 @@
         {{ with $c.intro }}<p class="ic-page-hero-desc reveal-up d-2">{{ . }}</p>{{ end }}
         <div class="ic-hero-actions reveal-up d-3">
           <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Get involved</a>
-          <a href="{{ .CurrentSection.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
+          <a href="{{ .Parent.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
         </div>
       </div>
       <div class="orgteam-hero-art reveal-up d-2" aria-hidden="true">
@@ -79,7 +79,7 @@
     <p class="orgteam-cta-sub">Partners, sponsors, and advisors — reach out. Volunteers grow into leaders from the teams up.</p>
     <div class="ic-hero-actions" style="justify-content:center;">
       <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Get in touch</a>
-      <a href="{{ .CurrentSection.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
+      <a href="{{ .Parent.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
     </div>
   </div>
 </section>

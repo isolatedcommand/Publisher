@@ -1,0 +1,17 @@
+{{/* Tiny redirect page: sections that only exist to group subsections
+     (e.g. the-operations) bounce visitors to a real page instead of showing
+     a blank listing. Set `redirect_to` in front matter. */}}
+{{ $to := .Params.redirect_to | default "/" | relLangURL }}
+<!DOCTYPE html>
+<html lang="{{ site.Language.Lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url={{ $to }}">
+  <link rel="canonical" href="{{ $to }}">
+  <title>{{ .Title }}</title>
+</head>
+<body>
+  <p>Redirecting to <a href="{{ $to }}">{{ .Title }}</a>…</p>
+  <script>location.replace({{ $to }});</script>
+</body>
+</html>

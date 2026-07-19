@@ -1,7 +1,10 @@
 {{ define "main" }}
 {{ $t := .Params.team }}
 {{ $accent := $t.accent | default "lime" }}
+{{/* section folder name is the team slug (e.g. academyteam) — matches the
+     `teams:` slug on each volunteer record, so membership stays dynamic */}}
 {{ $slug := .File.ContentBaseName }}
+{{ $hub := site.GetPage "/our-organisation" }}
 
 {{/* members for this team, pulled from the Directory data (single source) */}}
 {{ $members := slice }}
@@ -135,12 +138,15 @@
     </section>
     {{ end }}
 
-    {{/* ── explore other teams ─────────────────────────────────────────── */}}
+    {{/* ── explore other teams ─────────────────────────────────────────────
+         teams are sibling sections under the-operations; links follow the
+         real URL slugs so nothing points at old paths. */}}
+    {{ $ops := site.GetPage "/our-organisation/the-operations" }}
     <section class="orgteam-block orgteam-others">
       <p class="org-layer-tag">&gt; explore other teams</p>
       <div class="orgteam-others-grid">
-        {{ range .CurrentSection.RegularPages }}
-        {{ if ne .Permalink $.Permalink }}
+        {{ range (sort $ops.Sections "Weight") }}
+        {{ if and (ne .Permalink $.Permalink) .Params.team }}
         {{ $ot := .Params.team }}
         <a class="orgteam-other" href="{{ .RelPermalink }}">
           <span class="orgteam-other-icon orgteam-other-icon--{{ $ot.accent | default `lime` }}"><i class="{{ $ot.icon }}"></i></span>
@@ -163,7 +169,7 @@
     <p class="orgteam-cta-sub">{{ .Title }} is always looking for people who want to help out. No experience needed — just show up.</p>
     <div class="ic-hero-actions" style="justify-content:center;">
       <a href="{{ `connect-now/` | relLangURL }}" class="btn btn-main">Join Isolated Command</a>
-      <a href="{{ .CurrentSection.RelPermalink }}" class="btn btn-ghost">Back to Our Organisation</a>
+      <a href="{{ with $hub }}{{ .RelPermalink }}{{ else }}{{ `our-organisation/` | relLangURL }}{{ end }}" class="btn btn-ghost">Back to Our Organisation</a>
     </div>
   </div>
 </section>
