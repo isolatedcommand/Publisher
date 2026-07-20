@@ -22,7 +22,6 @@ jobs:
       matrix:
         repo:
           - isolatedcommand/isolatedcommand.com
-          - isolatedcommand/publisher.devcomm
           - isolatedcommand/Go
           - isolatedcommand/volunteer
           - conanzhangtech/File
