@@ -1,0 +1,285 @@
+// Product pages — every project is its own keycap.
+// The page is tinted by --p-accent (set inline from front matter); the hero
+// carries a per-product motif (pulse | layers | grid | arc) and a big product
+// keycap that presses once on load. All rules scoped under .project-page.
+
+.project-page {
+  --p-glow: color-mix(in srgb, var(--p-accent) 24%, transparent);
+  --p-dim: color-mix(in srgb, var(--p-accent) 55%, #000);
+
+  // ---- hero -------------------------------------------------------------
+  .project-hero {
+    position: relative;
+    padding: 160px 0 72px;
+    overflow: hidden;
+
+    .motif-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .project-hero-grid {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 56px;
+    }
+
+    .project-hero-copy { max-width: 660px; }
+  }
+
+  .project-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: var(--tracking-intel);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 18px;
+
+    &::before { content: '> '; color: var(--p-accent); }
+
+    .project-pid {
+      color: var(--p-accent);
+      margin-right: 14px;
+    }
+
+    .project-kind::before {
+      content: '· ';
+      color: var(--color-text-muted);
+    }
+  }
+
+  .project-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+    letter-spacing: var(--tracking-brutal);
+    line-height: 1.04;
+    margin: 0 0 18px;
+  }
+
+  .project-tagline {
+    font-size: clamp(16px, 1.6vw, 19px);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    max-width: 54ch;
+    margin-bottom: 28px;
+  }
+
+  .project-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+
+    a {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      color: var(--p-accent);
+      border: 2px solid var(--p-accent);
+      border-radius: var(--key-radius);
+      padding: 10px 22px;
+      box-shadow: var(--key-shadow) var(--p-dim);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+
+      &:hover {
+        background: var(--p-accent);
+        color: var(--color-ink);
+        transform: translateY(2px);
+        box-shadow: 0 3px 0 var(--p-dim);
+      }
+
+      &:active {
+        transform: translateY(5px);
+        box-shadow: 0 0 0 var(--p-dim);
+      }
+    }
+  }
+
+  // ---- the product keycap ----------------------------------------------
+  .project-keywell { flex: 0 0 auto; }
+
+  .project-key {
+    width: clamp(180px, 22vw, 260px);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-accent);
+    border: 2px solid var(--p-accent);
+    border-radius: var(--key-radius-lg);
+    box-shadow: 0 10px 0 var(--p-dim), 0 0 70px var(--p-glow);
+    animation: project-key-press 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+    overflow: hidden;
+
+    .project-key-glyph {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: clamp(3rem, 6vw, 4.6rem);
+      color: var(--p-accent);
+      letter-spacing: -0.04em;
+    }
+
+    &.has-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  @keyframes project-key-press {
+    0% { transform: translateY(-14px); box-shadow: 0 24px 0 var(--p-dim), 0 0 70px var(--p-glow); }
+    55% { transform: translateY(6px); box-shadow: 0 4px 0 var(--p-dim), 0 0 70px var(--p-glow); }
+    100% { transform: translateY(0); box-shadow: 0 10px 0 var(--p-dim), 0 0 70px var(--p-glow); }
+  }
+
+  // ---- motifs -----------------------------------------------------------
+  // pulse — one ECG lifeline drawing itself across the hero
+  .motif-pulse-svg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 58%;
+    width: 100%;
+    height: 200px;
+
+    path {
+      stroke-dasharray: 1400;
+      stroke-dashoffset: 1400;
+      animation: project-pulse-draw 2.2s ease-out 0.3s forwards;
+      filter: drop-shadow(0 0 6px var(--p-glow));
+    }
+  }
+
+  @keyframes project-pulse-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  // layers — the platform's stacked plates, receding behind the keycap
+  .motif-plate {
+    position: absolute;
+    right: 6%;
+    top: 30%;
+    width: 340px;
+    height: 340px;
+    border: 1.5px solid var(--p-accent);
+    border-radius: var(--key-radius-lg);
+
+    &.p1 { transform: translate(24px, -24px); opacity: 0.35; }
+    &.p2 { transform: translate(48px, -48px); opacity: 0.2; }
+    &.p3 { transform: translate(72px, -72px); opacity: 0.1; }
+  }
+
+  // grid — a volunteer roster of keycap dots
+  .project-hero.motif-grid .motif-layer {
+    background-image: radial-gradient(var(--p-accent) 1.5px, transparent 1.5px);
+    background-size: 34px 34px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 80% at 78% 45%, #000 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse 60% 80% at 78% 45%, #000 0%, transparent 70%);
+  }
+
+  // arc — redirect trajectories sweeping across the hero
+  .motif-arc-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  // ---- spec plate -------------------------------------------------------
+  .project-spec {
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    background: color-mix(in srgb, var(--color-bg-accent) 55%, transparent);
+    padding: 34px 0;
+
+    .project-spec-heading {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: var(--tracking-intel);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 18px;
+
+      &::before { content: '> '; color: var(--p-accent); }
+    }
+
+    .project-spec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px 32px;
+      margin: 0;
+    }
+
+    .project-spec-row {
+      dt {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: var(--tracking-intel);
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        margin-bottom: 4px;
+      }
+
+      dd {
+        font-size: 15px;
+        color: var(--color-text-light);
+        margin: 0;
+        line-height: 1.55;
+
+        a { color: var(--p-accent); }
+        a:hover { text-decoration: underline; }
+      }
+    }
+  }
+
+  // ---- body -------------------------------------------------------------
+  .project-body {
+    .project-content {
+      max-width: 820px;
+
+      h2 {
+        font-family: var(--font-display);
+        margin-top: 2.6em;
+
+        &::before { content: '## '; color: var(--p-accent); font-family: var(--font-mono); font-size: 0.7em; }
+      }
+
+      hr {
+        border: 0;
+        border-top: 1px solid var(--border-subtle);
+        margin: 2.4rem 0;
+      }
+
+      table a,
+      p a,
+      li a { color: var(--p-accent); }
+    }
+  }
+
+  // ---- responsive & motion ---------------------------------------------
+  @media (max-width: 991px) {
+    .project-hero {
+      padding-top: 120px;
+
+      .project-hero-grid { flex-direction: column-reverse; align-items: flex-start; }
+    }
+
+    .motif-plate { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-key { animation: none; }
+    .motif-pulse-svg path { animation: none; stroke-dashoffset: 0; }
+    .project-cta a { transition: none; }
+  }
+}

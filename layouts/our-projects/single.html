@@ -1,36 +1,104 @@
 {{ define "main" }}
 
-{{ partial "page-title.html" . }}
+{{/* Product page — each project is its own keycap.
+     Front matter:
+       pid      → catalogue code eyebrow (`PID-003`)
+       classification → short label after the pid (`Edge Infrastructure`)
+       tagline  → one-line thesis under the title
+       accent   → hex; tints the whole page (default: keycap lime)
+       glyph    → short mono string shown on the product keycap (`go/`)
+       motif    → hero backdrop: pulse | layers | grid | arc
+       links    → [{label, url}] keycap CTA buttons
+       image    → shown on the keycap instead of the glyph when set
+       information → [{label, info}] spec plate rows (existing field)
+     Pages with none of the new fields still render: lime accent, first
+     letter of the title as the glyph, no motif. */}}
 
-{{ $data := index site.Data site.Language.Lang }}
+{{ $accent := .Params.accent | default "#7BE43C" }}
+{{ $glyph := .Params.glyph | default (substr .Title 0 1) }}
+{{ $motif := .Params.motif | default "" }}
+{{ $img := .Params.image }}
+{{ $showImg := and $img (ne $img "images/logo.svg") }}
 
-<section class="portfolio-single-page section-sm">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        {{ with .Params.image }}
-        <img class="img-responsive w-100 project-hero-img" src="{{ . | relURL }}" alt="{{ $.Title }}">
-        {{ end }}
-      </div>
-      <div class="col-md-4">
-        <div class="project-details">
-          <p class="ic-faq-side-heading">project details</p>
-          <ul>
-            {{ range .Params.information }}
-            <li><span class="project-details-label">{{ .label }}</span> <strong>{{ .info | markdownify }}</strong></li>
+<article class="project-page" style="--p-accent: {{ $accent | safeCSS }};">
+
+  <section class="project-hero{{ with $motif }} motif-{{ . }}{{ end }}">
+    <div class="motif-layer" aria-hidden="true">
+      {{ if eq $motif "pulse" }}
+      <svg viewBox="0 0 1200 200" preserveAspectRatio="none" class="motif-pulse-svg">
+        <path d="M0,100 L360,100 L395,100 L415,38 L440,162 L462,72 L480,100 L1200,100"
+              fill="none" stroke="var(--p-accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+      </svg>
+      {{ else if eq $motif "layers" }}
+      <div class="motif-plate p1"></div>
+      <div class="motif-plate p2"></div>
+      <div class="motif-plate p3"></div>
+      {{ else if eq $motif "arc" }}
+      <svg viewBox="0 0 1200 400" preserveAspectRatio="none" class="motif-arc-svg">
+        <path d="M-40,380 Q 400,40 1240,180" fill="none" stroke="var(--p-accent)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        <path d="M-40,420 Q 500,120 1240,260" fill="none" stroke="var(--p-accent)" stroke-width="1" opacity=".45" vector-effect="non-scaling-stroke"/>
+        <path d="M-40,340 Q 300,-20 1240,120" fill="none" stroke="var(--p-accent)" stroke-width="1" opacity=".25" vector-effect="non-scaling-stroke"/>
+      </svg>
+      {{ end }}
+    </div>
+
+    <div class="container">
+      <div class="project-hero-grid">
+        <div class="project-hero-copy">
+          <p class="project-eyebrow">
+            {{ with .Params.pid }}<span class="project-pid">{{ . | lower }}</span>{{ end }}
+            {{ with .Params.classification }}<span class="project-kind">{{ . | lower }}</span>{{ end }}
+          </p>
+          <h1 class="project-title reveal-up">{{ .Title }}</h1>
+          {{ with .Params.tagline | default .Params.description }}
+          <p class="project-tagline reveal-up d-1">{{ . }}</p>
+          {{ end }}
+          {{ with .Params.links }}
+          <div class="project-cta reveal-up d-2">
+            {{ range . }}
+            <a href="{{ .url }}"{{ if findRE `^http` .url }} target="_blank" rel="noopener"{{ end }}>{{ .label }}</a>
             {{ end }}
-          </ul>
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="project-keywell" aria-hidden="true">
+          <div class="project-key{{ if $showImg }} has-image{{ end }}">
+            {{ if $showImg }}
+            <img src="{{ $img | relURL }}" alt="" loading="eager">
+            {{ else }}
+            <span class="project-key-glyph">{{ $glyph }}</span>
+            {{ end }}
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="project-content post-content mt-50">
-          {{ .Content }}
+  </section>
+
+  {{ with .Params.information }}
+  <section class="project-spec">
+    <div class="container">
+      <p class="project-spec-heading">spec sheet</p>
+      <dl class="project-spec-grid">
+        {{ range . }}
+        <div class="project-spec-row">
+          <dt>{{ .label }}</dt>
+          <dd>{{ .info | markdownify }}</dd>
         </div>
+        {{ end }}
+      </dl>
+    </div>
+  </section>
+  {{ end }}
+
+  <section class="project-body section-sm">
+    <div class="container">
+      <div class="project-content post-content">
+        {{ .Content }}
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+</article>
 
 {{ end }}
